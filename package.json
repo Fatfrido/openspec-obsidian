@@ -1,0 +1,25 @@
+{
+  "name": "openspec-obsidian",
+  "version": "0.1.0",
+  "description": "Navigate OpenSpec artifacts as an Obsidian vault: frontmatter, path-wikilinks, tags, deterministic archive with link rewrite",
+  "type": "module",
+  "bin": {
+    "openspec-obsidian": "bin/cli.mjs"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "assets"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fatfrido/openspec-obsidian.git"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  }
+}
