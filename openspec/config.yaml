@@ -1,0 +1,60 @@
+schema: spec-driven
+
+context: |
+  openspec-obsidian is a zero-dependency Node ESM CLI (bin/cli.mjs dispatches to
+  lib/{init,backfill,archive}.mjs) that layers Obsidian-vault conventions — YAML
+  frontmatter, path wikilinks, a three-family tag taxonomy — onto OpenSpec
+  artifacts, plus a deterministic archive step that syncs delta specs into the
+  live specs and rewrites links. There is no runtime app; the deliverable is the
+  CLI and the static assets/ it installs.
+  Stack: Node >= 20, ESM only (.mjs), synchronous node:fs, zero dependencies,
+  node:test runner, npm. No bundler/linter/formatter.
+  Conventions: Conventional Commits; work on a feature branch, never main;
+  tags live in frontmatter only (never inline #tags in requirement bodies);
+  links are path wikilinks with display labels ([[changes/<id>/design|<id> design]]),
+  never bare [[alias]]; author links one direction only (proposal -> design/tasks/deltas,
+  delta -> main spec) since Obsidian backlinks cover the reverse.
+  This repository dogfoods openspec-obsidian: the openspec/ tree is a worked example
+  of the very conventions the tool installs.
+
+# Project context (optional)
+# This is shown to AI when creating artifacts.
+# Add your tech stack, conventions, style guides, domain knowledge, etc.
+# Example:
+#   context: |
+#     Tech stack: TypeScript, React, Node.js
+#     We use conventional commits
+#     Domain: e-commerce platform
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+rules:
+  proposal:
+    - Verify actual spec state first (openspec list; ls openspec/specs) — author deltas as
+      MODIFIED/REMOVED against existing capabilities instead of minting parallel ones.
+    - Keep proposals under ~400 words; one capability per change.
+    - "Frontmatter first: reproduce the template YAML block (type, change, tags, aliases) plus the design/tasks/specs PATH-wikilink properties [[changes/<change>/<file>|display]] — Obsidian resolves links by path/filename, NOT by alias, so never use a bare [[alias]]; add one capability/<name> tag and one specs delta link per capability."
+    - "Author cross-artifact links one direction only (proposal to design/tasks/deltas); add no reverse links — Obsidian backlinks cover them."
+  specs:
+    - "Scenarios use exactly four hashtags (#### Scenario:) and every requirement has >=1 scenario."
+    - "No inline #tags or extra markup inside requirement/scenario bodies."
+    - "Frontmatter first: type spec-delta, change, capability, tags, a unique alias [<change> <cap> delta], and main_spec as a PATH wikilink [[specs/<cap>/spec|<cap> spec]] (path, not alias — Obsidian resolves by path; stable across archiving); one delta file = one capability."
+    - "Tags live only in frontmatter, drawn from openspec, type/<artifact>, and capability/<name>; never inline them in bodies."
+    - "MODIFIED delta requirements must restate the COMPLETE requirement block (description + all
+      scenarios, kept and changed alike) — auto-archive merges mechanically by whole-block
+      replacement, so a partial MODIFIED delta would silently drop unlisted scenarios."
+  tasks:
+    - Every task names its verification command.
+    - Order tasks so the project builds and existing tests pass after each task.
+    - "Frontmatter first: reproduce the template YAML block (type tasks, change, tags with one capability/<name> per capability, unique alias [<change> tasks])."
+  design:
+    - Record only decisions that constrain implementation; no speculative alternatives.
+    - "Frontmatter first: reproduce the template YAML block (type design, change, tags with one capability/<name> per capability, unique alias [<change> design])."
