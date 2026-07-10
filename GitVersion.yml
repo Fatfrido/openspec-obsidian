@@ -1,0 +1,14 @@
+# GitVersion configuration.
+# Trunk-based: every commit on `main` gets a new semantic version (Mainline
+# strategy), driven by Conventional Commit messages — the schema this repo uses.
+#
+#   feat:                      -> minor bump   (e.g. 0.1.0 -> 0.2.0)
+#   fix:/chore:/docs:/etc.     -> patch bump   (also the default per-commit bump)
+#   <type>!:  or  BREAKING CHANGE  -> major bump (e.g. 0.1.0 -> 1.0.0)
+#
+# Reference: https://gitversion.net/docs/reference/configuration
+workflow: TrunkBased/preview1
+
+major-version-bump-message: '^\w+(\([^)]*\))?!:|BREAKING[ -]CHANGE'
+minor-version-bump-message: '^feat(\([^)]*\))?:'
+patch-version-bump-message: '^(build|chore|ci|docs|fix|perf|refactor|revert|style|test)(\([^)]*\))?:'

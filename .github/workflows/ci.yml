@@ -5,6 +5,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Tests
@@ -29,3 +32,37 @@ jobs:
       # This repo dogfoods openspec-obsidian, so gate with the local CLI
       # (external repos would use: npx github:Fatfrido/openspec-obsidian check).
       - run: node bin/cli.mjs check
+
+  version:
+    name: Version
+    needs: [test, specs]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v4.7.0
+        with:
+          versionSpec: '6.8.x'
+      - name: Determine version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v4.7.0
+      - name: Tag commit
+        env:
+          VERSION: ${{ steps.gitversion.outputs.semVer }}
+        run: |
+          tag="v${VERSION}"
+          if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
+            echo "Tag ${tag} already exists - skipping."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${tag}" -m "Release ${tag}"
+          git push origin "${tag}"
+          echo "Tagged ${GITHUB_SHA} as ${tag}"
