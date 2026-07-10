@@ -34,6 +34,17 @@ Obsidian resolves `[[…]]` by **path/filename only** — aliases are autocomple
 
 Links are authored one way only — proposal → design/tasks/deltas, delta → main spec. The reverse direction (main spec → its deltas, design → its proposal) comes free via Obsidian backlinks. No link maintenance in two places.
 
+## Install
+
+From the npm registry:
+
+```bash
+npx openspec-obsidian <command>          # run without installing
+npm install --save-dev openspec-obsidian # or pin as a dev dependency
+```
+
+No npm release yet, or want to pin an exact commit? `npx github:Fatfrido/openspec-obsidian <command>` runs straight from the repo (`…#<sha> <command>` to pin) and is used throughout the examples below. See [Releasing](#releasing-maintainers) for how versions reach npm.
+
 ## Adopt in your repo
 
 Your repo must already be an OpenSpec project (`openspec init`, CLI v1.4.x). Then:
@@ -89,6 +100,17 @@ Paste-ready final step for an apply skill/prompt (after the implementation commi
 > **Sync + archive on the branch**: run `npx github:Fatfrido/openspec-obsidian archive` from the repo root. It syncs delta specs into `openspec/specs/`, moves the change to `openspec/changes/archive/YYYY-MM-DD-<name>/`, rewrites its intra-change path wikilinks, and verifies links resolve. If it prints `NOTHING TO ARCHIVE`, stop and report (a task checkbox is still open). Then run `openspec validate --all --strict --no-interactive`. Commit in two commits: `git add openspec/specs` → `docs(openspec): sync <caps> specs`; then `git add -A` → `chore(openspec): archive <name>`.
 
 For a manual archive skill, keep one guardrail: archive via the deterministic `archive` command; never hand-`mv` a change dir (a bare `mv` leaves the moved change's path wikilinks pointing at the old location).
+
+## Releasing (maintainers)
+
+Publishing to npm is automated by [`.github/workflows/publish.yml`](.github/workflows/publish.yml). One-time setup: add an `NPM_TOKEN` repository secret — an npm **Automation** access token with publish rights to `openspec-obsidian` — under *Settings → Secrets and variables → Actions*.
+
+To cut a release:
+
+1. Bump `version` in `package.json` (SemVer) and merge to `main`.
+2. Create a GitHub Release with tag `v<version>` (e.g. `v0.1.0`) matching that version.
+
+Publishing the Release runs the workflow, which tests then `npm publish --provenance` to the public registry. `workflow_dispatch` allows a manual run against `main`. The token is used only in CI — nothing is published from a developer machine.
 
 ## Compatibility
 
