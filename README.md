@@ -45,6 +45,14 @@ npx github:Fatfrido/openspec-obsidian backfill    # add frontmatter to every exi
 
 `init` installs the Obsidian-aware artifact templates into `openspec/schemas/spec-driven/` (existing files are skipped unless `--force`) and appends the authoring `rules:` block to `openspec/config.yaml` (printed for manual merge if you already have one). `backfill` is idempotent — files that already have frontmatter are never touched — and verifies every generated wikilink resolves before it succeeds; use `--dry-run` to preview. Then open `openspec/` as a vault in Obsidian; workspace state stays untracked via the gitignored `openspec/.obsidian/`.
 
+## Example: this repo dogfoods openspec-obsidian
+
+`openspec/` in this repository is a worked example, produced by exactly the steps above. It was bootstrapped with `openspec init`, then `openspec-obsidian init`, and the CLI's own behavior was documented through the full workflow: the `adopt-openspec-obsidian` change (proposal + design + tasks + four delta specs) was authored and then synced and moved with `openspec-obsidian archive`. Browse:
+
+- `openspec/specs/{init,backfill,archive,check}/spec.md` — the live capability specs (open `openspec/` as an Obsidian vault to walk the graph and tag taxonomy).
+- `openspec/changes/archive/<date>-adopt-openspec-obsidian/` — the archived change, with its intra-change path wikilinks rewritten to the archived location.
+- `.github/workflows/ci.yml` — the `specs` job gating on `openspec validate --all --strict` and `openspec-obsidian check`.
+
 ## Archive: when and how
 
 **Recommendation: archive at apply-completion, on the PR branch.** When the last task checkbox flips to `- [x]`, run:
