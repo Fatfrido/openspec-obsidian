@@ -1,0 +1,28 @@
+name: Publish
+
+# Publishes openspec-obsidian to the public npm registry.
+# Trigger: a published GitHub Release (tag it v<version>, matching package.json),
+# or a manual run. Requires an NPM_TOKEN repo secret (Automation token) with
+# publish rights. Provenance is attested via GitHub OIDC (public repo).
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # OIDC token for npm provenance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      - run: npm test
+      - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
