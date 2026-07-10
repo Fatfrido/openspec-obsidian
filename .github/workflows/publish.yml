@@ -2,8 +2,10 @@ name: Publish
 
 # Publishes openspec-obsidian to the public npm registry.
 # Trigger: a published GitHub Release (tag it v<version>, matching package.json),
-# or a manual run. Requires an NPM_TOKEN repo secret (Automation token) with
-# publish rights. Provenance is attested via GitHub OIDC (public repo).
+# or a manual run. Authentication is tokenless via npm Trusted Publishing (OIDC):
+# configure a Trusted Publisher for this package on npmjs.com (provider GitHub
+# Actions, repo Fatfrido/openspec-obsidian, workflow file publish.yml). npm then
+# attests provenance automatically; no NPM_TOKEN secret is required.
 on:
   release:
     types: [published]
@@ -12,17 +14,29 @@ on:
 jobs:
   publish:
     name: Publish to npm
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Trusted Publishing requires a GitHub-hosted runner
     permissions:
       contents: read
-      id-token: write # OIDC token for npm provenance
+      id-token: write # OIDC identity token for Trusted Publishing + provenance
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
-      - run: npm test
-      - run: npm publish --provenance --access public
+      - name: Verify release tag matches package.json version
+        if: github.event_name == 'release'
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          pkg_version="$(node -p "require('./package.json').version")"
+          expected="v${pkg_version}"
+          if [ "$RELEASE_TAG" != "$expected" ]; then
+            echo "::error::Release tag '${RELEASE_TAG}' does not match package.json version '${pkg_version}' (expected '${expected}'). Retag the release or bump package.json."
+            exit 1
+          fi
+          echo "Release tag ${RELEASE_TAG} matches package.json version ${pkg_version}."
+      # Node 20 ships npm 10.x; tokenless Trusted Publishing needs npm >= 11.5.1.
+      - run: npm install -g npm@latest
+      - run: npm test
+      - run: npm publish --access public
