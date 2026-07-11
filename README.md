@@ -60,6 +60,18 @@ openspec-obsidian backfill    # add frontmatter to every existing bare artifact
 
 `init` installs the Obsidian-aware artifact templates into `openspec/schemas/spec-driven/` (existing files are skipped unless `--force`) and appends the authoring `rules:` block to `openspec/config.yaml` (printed for manual merge if you already have one). `backfill` is idempotent — files that already have frontmatter are never touched — and verifies every generated wikilink resolves before it succeeds; use `--dry-run` to preview. Then open `openspec/` as a vault in Obsidian; workspace state stays untracked via the gitignored `openspec/.obsidian/`.
 
+## Dashboard
+
+Generate a single navigable overview of the `openspec/` tree:
+
+```bash
+openspec-obsidian dashboard
+```
+
+It writes `openspec/dashboard.md` — a deterministic, wikilinked summary of every active change (task progress and completeness), the capability catalog (requirement counts), and archived history — computed from the vault with `node:fs`, no OpenSpec CLI. It also seeds `openspec/dashboard.base`, a native [Obsidian Bases](https://help.obsidian.md/bases) view over artifact frontmatter, when that file is absent (`--force` overwrites it; `--dry-run` previews). Both outputs live in the tracked vault body, never in the gitignored `openspec/.obsidian/`.
+
+The note is a snapshot: re-run `dashboard` whenever changes or specs move — in particular right after `archive` — so it stays current, and gate it in CI (below) to fail on drift. Open `openspec/dashboard.md` in Obsidian as your entry point (bookmark it), or the `.base` for live filtering and sorting.
+
 ## Example: this repo dogfoods openspec-obsidian
 
 `openspec/` in this repository is a worked example, produced by exactly the steps above. It was bootstrapped with `openspec init`, then `openspec-obsidian init`, and the CLI's own behavior was documented through the full workflow: the `adopt-openspec-obsidian` change (proposal + design + tasks + four delta specs) was authored and then synced and moved with `openspec-obsidian archive`. Browse:
@@ -78,7 +90,7 @@ openspec-obsidian archive
 
 It deterministically: syncs delta specs into `openspec/specs/` (ADDED/MODIFIED/REMOVED/RENAMED merge), moves each all-tasks-complete change to `openspec/changes/archive/YYYY-MM-DD-<id>/`, rewrites the change's intra-change wikilink prefixes, and verifies every link still resolves — failing loudly on a broken link or an existing archive target. Changes with open tasks are skipped.
 
-Commit the result on the feature branch (convention: `docs(openspec): sync <caps> specs` + `chore(openspec): archive <id>`), then squash-merge — the archive commits fold into the change's single commit on main. **No AI or agent is required for any of this, and no archive commits ever land on main directly.** Gate it with `check` in CI (below) so a complete-but-unarchived change can never merge.
+Commit the result on the feature branch (convention: `docs(openspec): sync <caps> specs` + `chore(openspec): archive <id>`), then squash-merge — the archive commits fold into the change's single commit on main. After the move, re-run `openspec-obsidian dashboard` and stage the refreshed `openspec/dashboard.md` with the archive commit so the overview never drifts. **No AI or agent is required for any of this, and no archive commits ever land on main directly.** Gate it with `check` in CI (below) so a complete-but-unarchived change can never merge.
 
 ## CI snippets
 
@@ -93,6 +105,8 @@ Commit the result on the feature branch (convention: `docs(openspec): sync <caps
       - run: npm install -g @fission-ai/openspec@1.4.1
       - run: openspec validate --all --strict --no-interactive
       - run: npx github:Fatfrido/openspec-obsidian check
+      - run: npx github:Fatfrido/openspec-obsidian dashboard
+      - run: git diff --exit-code openspec/dashboard.md openspec/dashboard.base  # fail on a stale dashboard
 ```
 
 `check` exits 1 (naming the offenders) when any change has all tasks complete but still sits under `openspec/changes/`. For reproducible CI, pin a commit: `npx github:Fatfrido/openspec-obsidian#<sha> check` (`npx github:` needs network + git in the runner).

@@ -7,6 +7,7 @@ import process from "node:process";
 import { archive, check, ArchiveError } from "../lib/archive.mjs";
 import { backfill, BackfillError } from "../lib/backfill.mjs";
 import { init, InitError } from "../lib/init.mjs";
+import { dashboard, DashboardError } from "../lib/dashboard.mjs";
 
 const USAGE = `Usage: openspec-obsidian <command> [options]
 
@@ -16,11 +17,13 @@ Commands:
   archive   sync delta specs into openspec/specs/ and move every all-tasks-complete change
             to openspec/changes/archive/YYYY-MM-DD-<id>/, rewriting its wikilinks
   check     exit 1 if any change is complete (all tasks checked) but not archived (CI gate)
+  dashboard generate openspec/dashboard.md (changes, progress, capabilities, archive)
+            and seed openspec/dashboard.base (Obsidian Bases view) when absent
 
 Options:
   --root <dir>  repo root to operate on (default: current directory)
-  --dry-run     backfill: print planned actions, write nothing
-  --force       init: overwrite existing schema/template files
+  --dry-run     backfill/dashboard: print planned actions, write nothing
+  --force       init: overwrite schema/template files; dashboard: overwrite dashboard.base
 `;
 
 function parseArgs(argv) {
@@ -39,7 +42,7 @@ function parseArgs(argv) {
 }
 
 const args = parseArgs(process.argv.slice(2));
-if (!args || args._.length !== 1 || !["init", "backfill", "archive", "check"].includes(args._[0])) {
+if (!args || args._.length !== 1 || !["init", "backfill", "archive", "check", "dashboard"].includes(args._[0])) {
   console.error(USAGE);
   process.exit(2);
 }
@@ -50,9 +53,14 @@ try {
   if (cmd === "init") init(root, { force: !!args.force });
   else if (cmd === "backfill") backfill(root, { dryRun: !!args.dryRun });
   else if (cmd === "archive") archive(root);
-  else check(root);
+  else if (cmd === "check") check(root);
+  else dashboard(root, { dryRun: !!args.dryRun, force: !!args.force });
 } catch (err) {
-  const known = err instanceof ArchiveError || err instanceof BackfillError || err instanceof InitError;
+  const known =
+    err instanceof ArchiveError ||
+    err instanceof BackfillError ||
+    err instanceof InitError ||
+    err instanceof DashboardError;
   console.error(known ? err.message : err);
   process.exit(1);
 }
