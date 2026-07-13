@@ -117,6 +117,7 @@ function seed(root) {
   writeFile(root, "openspec/changes/ship-gadgets/tasks.md", TASKS_COMPLETE);
   writeFile(root, "openspec/changes/archive/2026-01-02-add-gizmos/proposal.md", "## Why\nGizmos.\n");
   writeFile(root, "openspec/changes/archive/2026-01-02-add-gizmos/tasks.md", TASKS_COMPLETE);
+  writeFile(root, "openspec/obsidian.yaml", "features:\n  dashboard: true\n");
 }
 
 const GOLDEN = `---
@@ -289,4 +290,23 @@ test("dashboard throws DashboardError when openspec/ is absent", () => {
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
+});
+
+// ==========================================================================
+// dashboard(): disabled feature is an actionable error
+// ==========================================================================
+
+test("dashboard throws DashboardError naming the toggle when the feature is disabled", (t) => {
+  const root = mkRoot();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  seed(root);
+  fs.rmSync(path.join(root, "openspec", "obsidian.yaml")); // feature not enabled
+
+  assert.throws(() => dashboard(root), (err) => {
+    assert.ok(err instanceof DashboardError);
+    assert.match(err.message, /openspec\/obsidian\.yaml/);
+    assert.match(err.message, /dashboard: true/);
+    return true;
+  });
+  assert.ok(!fs.existsSync(path.join(root, "openspec", "dashboard.md")), "writes nothing when disabled");
 });

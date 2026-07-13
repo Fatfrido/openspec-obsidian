@@ -12,8 +12,8 @@ aliases: ["add-feature-toggles tasks"]
 
 ## 2. Gate the dashboard command
 
-- [ ] 2.1 In `lib/dashboard.mjs`, make `dashboard()` throw `DashboardError` when `featureEnabled(root, "dashboard")` is false, with a message naming `openspec/obsidian.yaml` and the `dashboard: true` setting; commit this repo's own `openspec/obsidian.yaml` with `dashboard: true` in the same task so dogfooding keeps working. Verify: `npm test && node bin/cli.mjs dashboard --dry-run`
-- [ ] 2.2 Extend `test/dashboard.test.mjs`: disabled (no toggle file) throws `DashboardError` matching a message regex; enabled fixture writes `openspec/dashboard.md` as before (existing golden tests updated to enable the feature). Verify: `node --test test/dashboard.test.mjs`
+- [x] 2.1 In `lib/dashboard.mjs`, make `dashboard()` throw `DashboardError` when `featureEnabled(root, "dashboard")` is false, with a message naming `openspec/obsidian.yaml` and the `dashboard: true` setting; commit this repo's own `openspec/obsidian.yaml` with `dashboard: true` in the same task so dogfooding keeps working. Verify: `npm test && node bin/cli.mjs dashboard --dry-run`
+- [x] 2.2 Extend `test/dashboard.test.mjs`: disabled (no toggle file) throws `DashboardError` matching a message regex; enabled fixture writes `openspec/dashboard.md` as before (existing golden tests updated to enable the feature). Verify: `node --test test/dashboard.test.mjs`
 
 ## 3. Staleness gate in check
 
