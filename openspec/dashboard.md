@@ -10,7 +10,7 @@ aliases: ["openspec dashboard"]
 
 ## Active changes
 
-_No active changes._
+- [[changes/add-frontmatter-titles/proposal|add-frontmatter-titles]] — 0/5 tasks, in progress
 
 ## Capabilities
 
