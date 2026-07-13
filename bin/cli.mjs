@@ -7,7 +7,7 @@ import process from "node:process";
 import { archive, check, ArchiveError } from "../lib/archive.mjs";
 import { backfill, BackfillError } from "../lib/backfill.mjs";
 import { init, InitError } from "../lib/init.mjs";
-import { dashboard, DashboardError } from "../lib/dashboard.mjs";
+import { dashboard, verifyDashboard, DashboardError } from "../lib/dashboard.mjs";
 
 const USAGE = `Usage: openspec-obsidian <command> [options]
 
@@ -53,7 +53,7 @@ try {
   if (cmd === "init") init(root, { force: !!args.force });
   else if (cmd === "backfill") backfill(root, { dryRun: !!args.dryRun });
   else if (cmd === "archive") archive(root);
-  else if (cmd === "check") check(root);
+  else if (cmd === "check") { check(root); verifyDashboard(root); }
   else dashboard(root, { dryRun: !!args.dryRun, force: !!args.force });
 } catch (err) {
   const known =

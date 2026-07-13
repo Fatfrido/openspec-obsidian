@@ -17,8 +17,8 @@ aliases: ["add-feature-toggles tasks"]
 
 ## 3. Staleness gate in check
 
-- [ ] 3.1 In `lib/dashboard.mjs`, add exported `verifyDashboard(root)`: no-op when the feature is disabled; when enabled, regenerate via `renderDashboard` in memory and throw `DashboardError` with remedy `run: openspec-obsidian dashboard` when `openspec/dashboard.md` is missing or differs after newline normalization; writes nothing. In `bin/cli.mjs`, make the `check` command call `check(root)` then `verifyDashboard(root)`. Verify: `npm test && node bin/cli.mjs check`
-- [ ] 3.2 Extend `test/dashboard.test.mjs` for `verifyDashboard`: disabled+stale passes, enabled+fresh passes, enabled+stale throws, enabled+missing throws (message regex each). Verify: `node --test test/dashboard.test.mjs`
+- [x] 3.1 In `lib/dashboard.mjs`, add exported `verifyDashboard(root)`: no-op when the feature is disabled; when enabled, regenerate via `renderDashboard` in memory and throw `DashboardError` with remedy `run: openspec-obsidian dashboard` when `openspec/dashboard.md` is missing or differs after newline normalization; writes nothing. In `bin/cli.mjs`, make the `check` command call `check(root)` then `verifyDashboard(root)`. Verify: `npm test && node bin/cli.mjs check`
+- [x] 3.2 Extend `test/dashboard.test.mjs` for `verifyDashboard`: disabled+stale passes, enabled+fresh passes, enabled+stale throws, enabled+missing throws (message regex each). Verify: `node --test test/dashboard.test.mjs`
 
 ## 4. Seed toggles in init
 

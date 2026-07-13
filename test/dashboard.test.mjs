@@ -14,6 +14,7 @@ import {
   collectSpecs,
   renderDashboard,
   dashboard,
+  verifyDashboard,
   DashboardError,
 } from "../lib/dashboard.mjs";
 
@@ -309,4 +310,52 @@ test("dashboard throws DashboardError naming the toggle when the feature is disa
     return true;
   });
   assert.ok(!fs.existsSync(path.join(root, "openspec", "dashboard.md")), "writes nothing when disabled");
+});
+
+// ==========================================================================
+// verifyDashboard(): read-only staleness gate used by `check`
+// ==========================================================================
+
+test("verifyDashboard: disabled feature ignores a stale/absent dashboard", (t) => {
+  const root = mkRoot();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  seed(root);
+  fs.rmSync(path.join(root, "openspec", "obsidian.yaml")); // disabled: no toggle file
+  // No dashboard.md at all, yet the gate is a no-op when disabled.
+  assert.doesNotThrow(() => verifyDashboard(root));
+});
+
+test("verifyDashboard: enabled + fresh passes without writing", (t) => {
+  const root = mkRoot();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  seed(root);
+  dashboard(root); // writes a fresh openspec/dashboard.md
+  const before = readFile(root, "openspec/dashboard.md");
+  assert.doesNotThrow(() => verifyDashboard(root));
+  assert.equal(readFile(root, "openspec/dashboard.md"), before, "gate writes nothing");
+});
+
+test("verifyDashboard: enabled + stale throws with the remedy", (t) => {
+  const root = mkRoot();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  seed(root);
+  dashboard(root);
+  writeFile(root, "openspec/dashboard.md", "stale content\n");
+  assert.throws(() => verifyDashboard(root), (err) => {
+    assert.ok(err instanceof DashboardError);
+    assert.match(err.message, /run: openspec-obsidian dashboard/);
+    return true;
+  });
+});
+
+test("verifyDashboard: enabled + missing throws with the remedy", (t) => {
+  const root = mkRoot();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  seed(root); // enabled via toggle, but no dashboard.md written
+  assert.throws(() => verifyDashboard(root), (err) => {
+    assert.ok(err instanceof DashboardError);
+    assert.match(err.message, /missing/);
+    assert.match(err.message, /run: openspec-obsidian dashboard/);
+    return true;
+  });
 });
