@@ -1,5 +1,9 @@
 # openspec-obsidian
 
+[![npm version](https://img.shields.io/npm/v/openspec-obsidian)](https://www.npmjs.com/package/openspec-obsidian)
+[![CI](https://img.shields.io/github/actions/workflow/status/Fatfrido/openspec-obsidian/ci.yml?branch=main&label=CI)](https://github.com/Fatfrido/openspec-obsidian/actions/workflows/ci.yml)
+[![license: MIT](https://img.shields.io/github/license/Fatfrido/openspec-obsidian)](LICENSE)
+
 Navigate [OpenSpec](https://github.com/Fission-AI/OpenSpec) artifacts as an Obsidian vault: frontmatter, path-wikilinks, tags, and a deterministic archive step with link rewrite.
 
 ## What & why
@@ -43,15 +47,15 @@ npx openspec-obsidian <command>          # run without installing
 npm install --save-dev openspec-obsidian # or pin as a dev dependency
 ```
 
-No npm release yet, or want to pin an exact commit? `npx github:Fatfrido/openspec-obsidian <command>` runs straight from the repo (`…#<sha> <command>` to pin) and is used throughout the examples below. See [Releasing](#releasing-maintainers) for how versions reach npm.
+Pin an exact commit or run ahead of a release with the `github:` form: `npx github:Fatfrido/openspec-obsidian#<sha> <command>` runs straight from the repo. See [Releasing](#releasing-maintainers) for how versions reach npm.
 
 ## Adopt in your repo
 
 Your repo must already be an OpenSpec project (`openspec init`, CLI v1.4.x). Then:
 
 ```bash
-npx github:Fatfrido/openspec-obsidian init        # install schema + templates + config rules; gitignore openspec/.obsidian/
-npx github:Fatfrido/openspec-obsidian backfill    # add frontmatter to every existing bare artifact
+openspec-obsidian init        # install schema + templates + config rules; gitignore openspec/.obsidian/
+openspec-obsidian backfill    # add frontmatter to every existing bare artifact
 ```
 
 `init` installs the Obsidian-aware artifact templates into `openspec/schemas/spec-driven/` (existing files are skipped unless `--force`) and appends the authoring `rules:` block to `openspec/config.yaml` (printed for manual merge if you already have one). `backfill` is idempotent — files that already have frontmatter are never touched — and verifies every generated wikilink resolves before it succeeds; use `--dry-run` to preview. Then open `openspec/` as a vault in Obsidian; workspace state stays untracked via the gitignored `openspec/.obsidian/`.
@@ -69,7 +73,7 @@ npx github:Fatfrido/openspec-obsidian backfill    # add frontmatter to every exi
 **Recommendation: archive at apply-completion, on the PR branch.** When the last task checkbox flips to `- [x]`, run:
 
 ```bash
-npx github:Fatfrido/openspec-obsidian archive
+openspec-obsidian archive
 ```
 
 It deterministically: syncs delta specs into `openspec/specs/` (ADDED/MODIFIED/REMOVED/RENAMED merge), moves each all-tasks-complete change to `openspec/changes/archive/YYYY-MM-DD-<id>/`, rewrites the change's intra-change wikilink prefixes, and verifies every link still resolves — failing loudly on a broken link or an existing archive target. Changes with open tasks are skipped.
@@ -97,20 +101,26 @@ Commit the result on the feature branch (convention: `docs(openspec): sync <caps
 
 Paste-ready final step for an apply skill/prompt (after the implementation commit, before pushing):
 
-> **Sync + archive on the branch**: run `npx github:Fatfrido/openspec-obsidian archive` from the repo root. It syncs delta specs into `openspec/specs/`, moves the change to `openspec/changes/archive/YYYY-MM-DD-<name>/`, rewrites its intra-change path wikilinks, and verifies links resolve. If it prints `NOTHING TO ARCHIVE`, stop and report (a task checkbox is still open). Then run `openspec validate --all --strict --no-interactive`. Commit in two commits: `git add openspec/specs` → `docs(openspec): sync <caps> specs`; then `git add -A` → `chore(openspec): archive <name>`.
+> **Sync + archive on the branch**: run `openspec-obsidian archive` from the repo root. It syncs delta specs into `openspec/specs/`, moves the change to `openspec/changes/archive/YYYY-MM-DD-<name>/`, rewrites its intra-change path wikilinks, and verifies links resolve. If it prints `NOTHING TO ARCHIVE`, stop and report (a task checkbox is still open). Then run `openspec validate --all --strict --no-interactive`. Commit in two commits: `git add openspec/specs` → `docs(openspec): sync <caps> specs`; then `git add -A` → `chore(openspec): archive <name>`.
 
 For a manual archive skill, keep one guardrail: archive via the deterministic `archive` command; never hand-`mv` a change dir (a bare `mv` leaves the moved change's path wikilinks pointing at the old location).
 
 ## Releasing (maintainers)
 
-Publishing to npm is automated by [`.github/workflows/publish.yml`](.github/workflows/publish.yml). One-time setup: add an `NPM_TOKEN` repository secret — an npm **Automation** access token with publish rights to `openspec-obsidian` — under *Settings → Secrets and variables → Actions*.
+Publishing to npm is automated by [`.github/workflows/publish.yml`](.github/workflows/publish.yml) and authenticates tokenlessly via **OIDC Trusted Publishing** — no npm token or other long-lived secret is stored.
+
+One-time setup: on npmjs.com, add a Trusted Publisher for `openspec-obsidian` — provider **GitHub Actions**, repository **`Fatfrido/openspec-obsidian`**, workflow file **`publish.yml`**. The workflow requests an `id-token` and npm trusts that OIDC identity to publish.
 
 To cut a release:
 
 1. Bump `version` in `package.json` (SemVer) and merge to `main`.
 2. Create a GitHub Release with tag `v<version>` (e.g. `v0.1.0`) matching that version.
 
-Publishing the Release runs the workflow, which tests then `npm publish --provenance` to the public registry. `workflow_dispatch` allows a manual run against `main`. The token is used only in CI — nothing is published from a developer machine.
+Publishing the Release runs the workflow: it verifies the release tag equals `v<version>` from `package.json` (failing the release without publishing if they differ), then runs `npm test` and `npm publish --access public`. Provenance is attested automatically by Trusted Publishing. `workflow_dispatch` allows a manual run against `main`. Nothing is ever published from a developer machine.
+
+## Contributing
+
+Issues and pull requests are welcome at [github.com/Fatfrido/openspec-obsidian](https://github.com/Fatfrido/openspec-obsidian/issues). Run `npm test` before opening a PR and follow the [Conventional Commits](https://www.conventionalcommits.org/) schema for commit and PR titles.
 
 ## Compatibility
 
