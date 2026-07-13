@@ -60,6 +60,21 @@ openspec-obsidian backfill    # add frontmatter to every existing bare artifact
 
 `init` installs the Obsidian-aware artifact templates into `openspec/schemas/spec-driven/` (existing files are skipped unless `--force`) and appends the authoring `rules:` block to `openspec/config.yaml` (printed for manual merge if you already have one). `backfill` is idempotent — files that already have frontmatter are never touched — and verifies every generated wikilink resolves before it succeeds; use `--dry-run` to preview. Then open `openspec/` as a vault in Obsidian; workspace state stays untracked via the gitignored `openspec/.obsidian/`.
 
+## Optional features
+
+Some capabilities are opt-in. They are controlled by a tool-owned config file, `openspec/obsidian.yaml`, holding a `features:` map of booleans:
+
+```yaml
+features:
+  dashboard: true
+```
+
+Optional features default **off**: an absent file, an absent `features:` key, or an unlisted name all mean disabled. `openspec-obsidian init` seeds this file with every optional feature set to `false` and never overwrites it afterwards (not even with `--force`) — it records your choices, not reinstallable scaffolding. The core commands (`init`, `backfill`, `archive`, `check`) are never gated. Unknown feature names are ignored, so a newer config keeps working with an older tool.
+
+Today the only optional feature is `dashboard` (below).
+
+**Migration:** if you used the dashboard before feature toggles existed, `dashboard` now errors until you enable it — add the two `features:` lines above to `openspec/obsidian.yaml`. Existing dashboard output is otherwise unaffected.
+
 ## Dashboard
 
 Generate a single navigable overview of the `openspec/` tree:
@@ -68,9 +83,11 @@ Generate a single navigable overview of the `openspec/` tree:
 openspec-obsidian dashboard
 ```
 
+> Requires the `dashboard` [optional feature](#optional-features): add `features:` with `dashboard: true` to `openspec/obsidian.yaml` first, or the command exits with an actionable error.
+
 It writes `openspec/dashboard.md` — a deterministic, wikilinked summary of every active change (task progress and completeness), the capability catalog (requirement counts), and archived history — computed from the vault with `node:fs`, no OpenSpec CLI. It also seeds `openspec/dashboard.base`, a native [Obsidian Bases](https://help.obsidian.md/bases) view over artifact frontmatter, when that file is absent (`--force` overwrites it; `--dry-run` previews). Both outputs live in the tracked vault body, never in the gitignored `openspec/.obsidian/`.
 
-The note is a snapshot: re-run `dashboard` whenever changes or specs move — in particular right after `archive` — so it stays current, and gate it in CI (below) to fail on drift. Open `openspec/dashboard.md` in Obsidian as your entry point (bookmark it), or the `.base` for live filtering and sorting.
+The note is a snapshot: re-run `dashboard` whenever changes or specs move — in particular right after `archive` — so it stays current. When the `dashboard` feature is enabled, `check` fails on a missing or stale `openspec/dashboard.md` (see CI snippets below), so drift is caught without a separate step. Open `openspec/dashboard.md` in Obsidian as your entry point (bookmark it), or the `.base` for live filtering and sorting.
 
 ## Example: this repo dogfoods openspec-obsidian
 
@@ -105,11 +122,9 @@ Commit the result on the feature branch (convention: `docs(openspec): sync <caps
       - run: npm install -g @fission-ai/openspec@1.4.1
       - run: openspec validate --all --strict --no-interactive
       - run: npx github:Fatfrido/openspec-obsidian check
-      - run: npx github:Fatfrido/openspec-obsidian dashboard
-      - run: git diff --exit-code openspec/dashboard.md openspec/dashboard.base  # fail on a stale dashboard
 ```
 
-`check` exits 1 (naming the offenders) when any change has all tasks complete but still sits under `openspec/changes/`. For reproducible CI, pin a commit: `npx github:Fatfrido/openspec-obsidian#<sha> check` (`npx github:` needs network + git in the runner).
+`check` exits 1 (naming the offenders) when any change has all tasks complete but still sits under `openspec/changes/`, and — when the `dashboard` feature is enabled — also when `openspec/dashboard.md` is missing or stale (remedy: re-run `dashboard`). This single gate replaces the old regenerate-and-diff steps. For reproducible CI, pin a commit: `npx github:Fatfrido/openspec-obsidian#<sha> check` (`npx github:` needs network + git in the runner).
 
 ## Agent/skill integration
 

@@ -7,7 +7,7 @@ import process from "node:process";
 import { archive, check, ArchiveError } from "../lib/archive.mjs";
 import { backfill, BackfillError } from "../lib/backfill.mjs";
 import { init, InitError } from "../lib/init.mjs";
-import { dashboard, DashboardError } from "../lib/dashboard.mjs";
+import { dashboard, verifyDashboard, DashboardError } from "../lib/dashboard.mjs";
 
 const USAGE = `Usage: openspec-obsidian <command> [options]
 
@@ -16,9 +16,11 @@ Commands:
   backfill  add Obsidian frontmatter to existing bare artifacts (idempotent)
   archive   sync delta specs into openspec/specs/ and move every all-tasks-complete change
             to openspec/changes/archive/YYYY-MM-DD-<id>/, rewriting its wikilinks
-  check     exit 1 if any change is complete (all tasks checked) but not archived (CI gate)
+  check     exit 1 if any change is complete (all tasks checked) but not archived (CI gate);
+            also fails on a stale openspec/dashboard.md when the dashboard feature is enabled
   dashboard generate openspec/dashboard.md (changes, progress, capabilities, archive)
             and seed openspec/dashboard.base (Obsidian Bases view) when absent
+            (requires the dashboard feature: set features.dashboard: true in openspec/obsidian.yaml)
 
 Options:
   --root <dir>  repo root to operate on (default: current directory)
@@ -53,7 +55,7 @@ try {
   if (cmd === "init") init(root, { force: !!args.force });
   else if (cmd === "backfill") backfill(root, { dryRun: !!args.dryRun });
   else if (cmd === "archive") archive(root);
-  else if (cmd === "check") check(root);
+  else if (cmd === "check") { check(root); verifyDashboard(root); }
   else dashboard(root, { dryRun: !!args.dryRun, force: !!args.force });
 } catch (err) {
   const known =
