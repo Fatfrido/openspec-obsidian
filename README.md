@@ -46,7 +46,9 @@ Every artifact therefore carries a `title` key (mirroring its primary alias, e.g
 
 1. Install **Front Matter Title** from Community Plugins and enable it.
 2. Its default template is the `title` key, so no configuration is needed for the explorer/search/tab replacements.
-3. Turn on the plugin's **Graph** feature (Settings → Front Matter Title → Features → Graph) to relabel graph nodes too.
+3. Enable the plugin's **Graph** feature (Settings → Front Matter Title → Features → Graph) — a separate per-location toggle that is **off by default** — to relabel graph nodes too (likewise **Canvas** for canvas cards).
+
+**Why the graph doesn't change on its own:** native Obsidian labels graph nodes by filename only and never reads frontmatter, so the `title` key stays inert until the plugin is installed. The plugin then applies each surface independently: its default template relabels the explorer, search, tabs, and note headers immediately, but **the graph and canvas are opt-in and off by default**. So if you see titles everywhere *except* the graph, you have the plugin installed but haven't turned on its Graph feature (step 3).
 
 Strictly optional: without the plugin, `title` is inert frontmatter — the OpenSpec CLI ignores it (`validate --strict` is unchanged) and the vault behaves exactly as before; the graph is just not as readable. `backfill` also inserts a missing `title` into artifacts that already have frontmatter, so vaults backfilled before this key existed converge on the next `backfill` run.
 
