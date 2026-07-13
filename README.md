@@ -18,11 +18,11 @@ The conventions are pure frontmatter. The OpenSpec CLI (verified against v1.4.1)
 
 | Artifact | File | Keys |
 |---|---|---|
-| Main spec | `specs/<cap>/spec.md` | `type: spec`, `capability`, `tags: [openspec, type/spec, capability/<cap>]`, `aliases: ["<cap> spec"]` |
-| Proposal | `changes/<id>/proposal.md` | `type: proposal`, `change`, `tags: [openspec, type/proposal, capability/<c>…]` (one per delta), `aliases: ["<id> proposal"]`, plus links: `design`, `tasks`, `specs` (each only if the target file exists) |
-| Design | `changes/<id>/design.md` | `type: design`, `change`, `tags: [openspec, type/design, capability/<c>…]`, `aliases: ["<id> design"]` |
-| Tasks | `changes/<id>/tasks.md` | `type: tasks`, `change`, `tags: [openspec, type/tasks, capability/<c>…]`, `aliases: ["<id> tasks"]` |
-| Delta spec | `changes/<id>/specs/<cap>/spec.md` | `type: spec-delta`, `change`, `capability`, `tags: [openspec, type/spec, capability/<cap>]`, `aliases: ["<id> <cap> delta"]`, `main_spec: "[[specs/<cap>/spec\|<cap> spec]]"` |
+| Main spec | `specs/<cap>/spec.md` | `type: spec`, `title: "<cap> spec"`, `capability`, `tags: [openspec, type/spec, capability/<cap>]`, `aliases: ["<cap> spec"]` |
+| Proposal | `changes/<id>/proposal.md` | `type: proposal`, `title: "<id> proposal"`, `change`, `tags: [openspec, type/proposal, capability/<c>…]` (one per delta), `aliases: ["<id> proposal"]`, plus links: `design`, `tasks`, `specs` (each only if the target file exists) |
+| Design | `changes/<id>/design.md` | `type: design`, `title: "<id> design"`, `change`, `tags: [openspec, type/design, capability/<c>…]`, `aliases: ["<id> design"]` |
+| Tasks | `changes/<id>/tasks.md` | `type: tasks`, `title: "<id> tasks"`, `change`, `tags: [openspec, type/tasks, capability/<c>…]`, `aliases: ["<id> tasks"]` |
+| Delta spec | `changes/<id>/specs/<cap>/spec.md` | `type: spec-delta`, `title: "<id> <cap> delta"`, `change`, `capability`, `tags: [openspec, type/spec, capability/<cap>]`, `aliases: ["<id> <cap> delta"]`, `main_spec: "[[specs/<cap>/spec\|<cap> spec]]"` |
 
 Archived changes use the same shapes with the wikilink prefix `changes/archive/YYYY-MM-DD-<id>/`.
 
@@ -37,6 +37,18 @@ Obsidian resolves `[[…]]` by **path/filename only** — aliases are autocomple
 ### One-direction linking
 
 Links are authored one way only — proposal → design/tasks/deltas, delta → main spec. The reverse direction (main spec → its deltas, design → its proposal) comes free via Obsidian backlinks. No link maintenance in two places.
+
+### Graph node labels — Front Matter Title (optional)
+
+Obsidian labels every graph node with its file **basename**, and OpenSpec fixes those basenames (`proposal.md`, `design.md`, `tasks.md`, `spec.md`) — so the graph is a sea of identically-named `spec`/`proposal` nodes that can only be told apart by opening them. Aliases and link labels do not affect graph labels, and renaming artifact files would break the OpenSpec CLI and this tool's parsers.
+
+Every artifact therefore carries a `title` key (mirroring its primary alias, e.g. `add-widgets proposal`, `backfill spec`) stamped by `backfill`. The community plugin [Front Matter Title](https://github.com/snezhig/obsidian-front-matter-title) renders that key as the node label everywhere — graph, explorer, search, tabs — with no filename changes:
+
+1. Install **Front Matter Title** from Community Plugins and enable it.
+2. Its default template is the `title` key, so no configuration is needed for the explorer/search/tab replacements.
+3. Turn on the plugin's **Graph** feature (Settings → Front Matter Title → Features → Graph) to relabel graph nodes too.
+
+Strictly optional: without the plugin, `title` is inert frontmatter — the OpenSpec CLI ignores it (`validate --strict` is unchanged) and the vault behaves exactly as before; the graph is just not as readable. `backfill` also inserts a missing `title` into artifacts that already have frontmatter, so vaults backfilled before this key existed converge on the next `backfill` run.
 
 ## Install
 

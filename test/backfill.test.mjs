@@ -142,6 +142,7 @@ test("a. bare artifacts receive golden frontmatter for all five artifact types",
     readFile(root, "openspec/specs/widgets/spec.md"),
     `---
 type: spec
+title: "widgets spec"
 capability: widgets
 tags: [openspec, type/spec, capability/widgets]
 aliases: ["widgets spec"]
@@ -155,6 +156,7 @@ ${SPEC_BODY}`,
     readFile(root, "openspec/changes/add-widgets/proposal.md"),
     `---
 type: proposal
+title: "add-widgets proposal"
 change: add-widgets
 tags: [openspec, type/proposal, capability/widgets]
 aliases: ["add-widgets proposal"]
@@ -171,6 +173,7 @@ ${PROPOSAL_BODY}`,
     readFile(root, "openspec/changes/add-widgets/design.md"),
     `---
 type: design
+title: "add-widgets design"
 change: add-widgets
 tags: [openspec, type/design, capability/widgets]
 aliases: ["add-widgets design"]
@@ -184,6 +187,7 @@ ${DESIGN_BODY}`,
     readFile(root, "openspec/changes/add-widgets/tasks.md"),
     `---
 type: tasks
+title: "add-widgets tasks"
 change: add-widgets
 tags: [openspec, type/tasks, capability/widgets]
 aliases: ["add-widgets tasks"]
@@ -197,6 +201,7 @@ ${TASKS_BODY}`,
     readFile(root, "openspec/changes/add-widgets/specs/widgets/spec.md"),
     `---
 type: spec-delta
+title: "add-widgets widgets delta"
 change: add-widgets
 capability: widgets
 tags: [openspec, type/spec, capability/widgets]
@@ -214,6 +219,7 @@ ${DELTA_BODY}`,
     archProposal,
     `---
 type: proposal
+title: "add-gizmos proposal"
 change: add-gizmos
 tags: [openspec, type/proposal, capability/gizmos]
 aliases: ["add-gizmos proposal"]
@@ -230,6 +236,7 @@ ${PROPOSAL_BODY}`,
     readFile(root, "openspec/changes/archive/2026-01-02-add-gizmos/specs/gizmos/spec.md"),
     `---
 type: spec-delta
+title: "add-gizmos gizmos delta"
 change: add-gizmos
 capability: gizmos
 tags: [openspec, type/spec, capability/gizmos]
@@ -279,6 +286,7 @@ test("c. a file with existing frontmatter is never modified", async (t) => {
 
   const custom = `---
 type: spec
+title: "widgets spec"
 capability: widgets
 tags: [openspec, type/spec, capability/widgets, custom/handmade]
 aliases: ["widgets spec", "my widgets"]
@@ -321,6 +329,7 @@ test("d. proposal omits design:/tasks: keys when the sibling files are absent", 
     fm,
     `---
 type: proposal
+title: "x proposal"
 change: x
 tags: [openspec, type/proposal]
 aliases: ["x proposal"]
@@ -410,4 +419,98 @@ test("dry-run reports planned writes without touching any file", async (t) => {
   const { written } = backfill(root, { dryRun: true });
   assert.deepEqual(written, ["specs/widgets/spec.md"], "planned write reported");
   assert.equal(readFile(root, "openspec/specs/widgets/spec.md"), SPEC_BODY, "file untouched");
+});
+
+// ==========================================================================
+// title upsert: annotated artifact without a title gains exactly the title
+// ==========================================================================
+
+const ANNOTATED_NO_TITLE = `---
+type: spec
+capability: widgets
+tags: [openspec, type/spec, capability/widgets]
+aliases: ["widgets spec"]
+---
+
+${SPEC_BODY}`;
+
+test("title upsert: annotated artifact without a title gains exactly one line", async (t) => {
+  const root = mkRoot();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+
+  writeFile(root, "openspec/specs/widgets/spec.md", ANNOTATED_NO_TITLE);
+
+  const { written, skipped } = backfill(root);
+  assert.deepEqual(written, ["specs/widgets/spec.md"], "upsert counts as a write");
+  assert.equal(skipped.length, 0);
+
+  const after = readFile(root, "openspec/specs/widgets/spec.md");
+  // Byte-for-byte: exactly the title line inserted after `type:`.
+  assert.equal(
+    after,
+    `---
+type: spec
+title: "widgets spec"
+capability: widgets
+tags: [openspec, type/spec, capability/widgets]
+aliases: ["widgets spec"]
+---
+
+${SPEC_BODY}`,
+  );
+
+  // The diff is exactly one line: the title.
+  const before = ANNOTATED_NO_TITLE.split("\n");
+  const now = after.split("\n");
+  assert.equal(now.length, before.length + 1, "exactly one line added");
+  assert.deepEqual(now.slice(0, 2).concat(now.slice(3)), before, "only the title line is new");
+  assert.equal(now[2], 'title: "widgets spec"');
+
+  // Second run is byte-identical (title now present -> skipped).
+  const second = backfill(root);
+  assert.equal(second.written.length, 0, "second run writes nothing");
+  assert.deepEqual(second.skipped, ["specs/widgets/spec.md"], "second run skips");
+  assert.equal(readFile(root, "openspec/specs/widgets/spec.md"), after, "byte-identical");
+});
+
+test("title upsert: --dry-run reports the upsert without writing", async (t) => {
+  const root = mkRoot();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+
+  writeFile(root, "openspec/specs/widgets/spec.md", ANNOTATED_NO_TITLE);
+
+  const { written } = backfill(root, { dryRun: true });
+  assert.deepEqual(written, ["specs/widgets/spec.md"], "planned upsert reported");
+  assert.equal(
+    readFile(root, "openspec/specs/widgets/spec.md"),
+    ANNOTATED_NO_TITLE,
+    "file untouched under dry-run",
+  );
+});
+
+test("title upsert: no type: line inserts the title after the opening fence", async (t) => {
+  const root = mkRoot();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+
+  // A spec whose frontmatter has no type: key at all.
+  const noType = `---
+capability: widgets
+aliases: ["widgets spec"]
+---
+
+${SPEC_BODY}`;
+  writeFile(root, "openspec/specs/widgets/spec.md", noType);
+
+  backfill(root);
+  assert.equal(
+    readFile(root, "openspec/specs/widgets/spec.md"),
+    `---
+title: "widgets spec"
+capability: widgets
+aliases: ["widgets spec"]
+---
+
+${SPEC_BODY}`,
+    "title inserted immediately after the opening fence",
+  );
 });
