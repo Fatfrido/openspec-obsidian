@@ -38,6 +38,9 @@
   },
   "scripts": {
     "test": "node --test test/*.test.mjs",
+    "opsx:validate": "openspec validate --all --strict --no-interactive",
+    "opsx:check": "node bin/cli.mjs check",
+    "opsx:archive": "node bin/cli.mjs archive",
     "prepublishOnly": "npm test"
   }
 }
