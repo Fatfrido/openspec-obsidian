@@ -7,8 +7,8 @@ aliases: ["add-feature-toggles tasks"]
 
 ## 1. Feature toggle config
 
-- [ ] 1.1 Add `assets/obsidian.yaml` (top-level `features:` map with every optional feature set to `false`, brief usage comment) and `lib/features.mjs` exporting `FeaturesError`, `readFeatures(root)`, and `featureEnabled(root, name)`: absent file or absent `features:` key returns no enabled features; entries must match `name: true|false`; unknown names are kept but harmless; any other line under `features:` throws `FeaturesError` naming `openspec/obsidian.yaml`. Verify: `npm test`
-- [ ] 1.2 Add `test/features.test.mjs` covering: absent file (disabled), `dashboard: true` (enabled), `dashboard: false` (disabled), unknown feature name ignored, malformed entry throws `FeaturesError` with a message regex naming the file. Verify: `node --test test/features.test.mjs`
+- [x] 1.1 Add `assets/obsidian.yaml` (top-level `features:` map with every optional feature set to `false`, brief usage comment) and `lib/features.mjs` exporting `FeaturesError`, `readFeatures(root)`, and `featureEnabled(root, name)`: absent file or absent `features:` key returns no enabled features; entries must match `name: true|false`; unknown names are kept but harmless; any other line under `features:` throws `FeaturesError` naming `openspec/obsidian.yaml`. Verify: `npm test`
+- [x] 1.2 Add `test/features.test.mjs` covering: absent file (disabled), `dashboard: true` (enabled), `dashboard: false` (disabled), unknown feature name ignored, malformed entry throws `FeaturesError` with a message regex naming the file. Verify: `node --test test/features.test.mjs`
 
 ## 2. Gate the dashboard command
 
