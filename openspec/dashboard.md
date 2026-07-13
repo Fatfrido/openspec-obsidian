@@ -10,7 +10,7 @@ aliases: ["openspec dashboard"]
 
 ## Active changes
 
-_No active changes._
+- [[changes/add-change-hub-notes/proposal|add-change-hub-notes]] — 0/6 tasks, in progress
 
 ## Capabilities
 
