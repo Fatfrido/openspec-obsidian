@@ -1,5 +1,6 @@
 ---
 type: spec-delta
+title: "adopt-openspec-obsidian init delta"
 change: adopt-openspec-obsidian
 capability: init
 tags: [openspec, type/spec, capability/init]

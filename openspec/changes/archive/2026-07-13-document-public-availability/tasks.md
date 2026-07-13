@@ -1,5 +1,6 @@
 ---
 type: tasks
+title: "document-public-availability tasks"
 change: document-public-availability
 tags: [openspec, type/tasks, capability/release]
 aliases: ["document-public-availability tasks"]

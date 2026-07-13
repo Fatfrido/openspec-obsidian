@@ -1,5 +1,6 @@
 ---
 type: proposal
+title: "add-feature-toggles proposal"
 change: add-feature-toggles
 tags: [openspec, type/proposal, capability/features, capability/dashboard, capability/check, capability/init]
 aliases: ["add-feature-toggles proposal"]

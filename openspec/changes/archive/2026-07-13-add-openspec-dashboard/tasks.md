@@ -1,5 +1,6 @@
 ---
 type: tasks
+title: "add-openspec-dashboard tasks"
 change: add-openspec-dashboard
 tags: [openspec, type/tasks, capability/dashboard]
 aliases: ["add-openspec-dashboard tasks"]

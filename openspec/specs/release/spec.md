@@ -1,5 +1,6 @@
 ---
 type: spec
+title: "release spec"
 capability: release
 tags: [openspec, type/spec, capability/release]
 aliases: ["release spec"]

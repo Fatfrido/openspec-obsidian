@@ -1,5 +1,6 @@
 ---
 type: design
+title: "add-frontmatter-titles design"
 change: add-frontmatter-titles
 tags: [openspec, type/design, capability/backfill]
 aliases: ["add-frontmatter-titles design"]

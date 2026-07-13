@@ -1,5 +1,6 @@
 ---
 type: spec
+title: "archive spec"
 capability: archive
 tags: [openspec, type/spec, capability/archive]
 aliases: ["archive spec"]

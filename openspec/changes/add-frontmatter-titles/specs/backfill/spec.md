@@ -1,5 +1,6 @@
 ---
 type: spec-delta
+title: "add-frontmatter-titles backfill delta"
 change: add-frontmatter-titles
 capability: backfill
 tags: [openspec, type/spec, capability/backfill]

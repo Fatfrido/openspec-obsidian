@@ -1,5 +1,6 @@
 ---
 type: proposal
+title: "add-frontmatter-titles proposal"
 change: add-frontmatter-titles
 tags: [openspec, type/proposal, capability/backfill]
 aliases: ["add-frontmatter-titles proposal"]

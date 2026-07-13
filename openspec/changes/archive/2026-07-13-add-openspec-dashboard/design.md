@@ -1,5 +1,6 @@
 ---
 type: design
+title: "add-openspec-dashboard design"
 change: add-openspec-dashboard
 tags: [openspec, type/design, capability/dashboard]
 aliases: ["add-openspec-dashboard design"]

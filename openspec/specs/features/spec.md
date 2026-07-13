@@ -1,5 +1,6 @@
 ---
 type: spec
+title: "features spec"
 capability: features
 tags: [openspec, type/spec, capability/features]
 aliases: ["features spec"]

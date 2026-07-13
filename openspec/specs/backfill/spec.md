@@ -1,5 +1,6 @@
 ---
 type: spec
+title: "backfill spec"
 capability: backfill
 tags: [openspec, type/spec, capability/backfill]
 aliases: ["backfill spec"]

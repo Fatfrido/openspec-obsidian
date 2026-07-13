@@ -1,5 +1,6 @@
 ---
 type: proposal
+title: "adopt-openspec-obsidian proposal"
 change: adopt-openspec-obsidian
 tags: [openspec, type/proposal, capability/init, capability/backfill, capability/archive, capability/check]
 aliases: ["adopt-openspec-obsidian proposal"]
