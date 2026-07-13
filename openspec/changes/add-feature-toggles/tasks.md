@@ -22,8 +22,8 @@ aliases: ["add-feature-toggles tasks"]
 
 ## 4. Seed toggles in init
 
-- [ ] 4.1 In `lib/init.mjs`, copy `assets/obsidian.yaml` to `openspec/obsidian.yaml` when absent (log the write); when present, skip and leave the file byte-identical even with `--force`. Verify: `npm test`
-- [ ] 4.2 Add `test/init.test.mjs` covering: fresh run seeds `openspec/obsidian.yaml` (golden content), second run with `--force` leaves a locally edited file byte-identical. Verify: `node --test test/init.test.mjs`
+- [x] 4.1 In `lib/init.mjs`, copy `assets/obsidian.yaml` to `openspec/obsidian.yaml` when absent (log the write); when present, skip and leave the file byte-identical even with `--force`. Verify: `npm test`
+- [x] 4.2 Add `test/init.test.mjs` covering: fresh run seeds `openspec/obsidian.yaml` (golden content), second run with `--force` leaves a locally edited file byte-identical. Verify: `node --test test/init.test.mjs`
 
 ## 5. Repo dogfood, CI, and docs
 
