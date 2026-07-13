@@ -1,5 +1,6 @@
 ---
 type: spec-delta
+title: "adopt-openspec-obsidian archive delta"
 change: adopt-openspec-obsidian
 capability: archive
 tags: [openspec, type/spec, capability/archive]

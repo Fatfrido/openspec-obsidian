@@ -1,5 +1,6 @@
 ---
 type: spec-delta
+title: "adopt-openspec-obsidian backfill delta"
 change: adopt-openspec-obsidian
 capability: backfill
 tags: [openspec, type/spec, capability/backfill]

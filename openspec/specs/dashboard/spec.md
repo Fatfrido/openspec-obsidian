@@ -1,5 +1,6 @@
 ---
 type: spec
+title: "dashboard spec"
 capability: dashboard
 tags: [openspec, type/spec, capability/dashboard]
 aliases: ["dashboard spec"]

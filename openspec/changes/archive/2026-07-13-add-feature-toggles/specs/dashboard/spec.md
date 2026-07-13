@@ -1,5 +1,6 @@
 ---
 type: spec-delta
+title: "add-feature-toggles dashboard delta"
 change: add-feature-toggles
 capability: dashboard
 tags: [openspec, type/spec, capability/dashboard]

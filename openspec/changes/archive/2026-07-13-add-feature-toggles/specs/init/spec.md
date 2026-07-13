@@ -1,5 +1,6 @@
 ---
 type: spec-delta
+title: "add-feature-toggles init delta"
 change: add-feature-toggles
 capability: init
 tags: [openspec, type/spec, capability/init]

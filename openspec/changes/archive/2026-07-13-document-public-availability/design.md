@@ -1,5 +1,6 @@
 ---
 type: design
+title: "document-public-availability design"
 change: document-public-availability
 tags: [openspec, type/design, capability/release]
 aliases: ["document-public-availability design"]

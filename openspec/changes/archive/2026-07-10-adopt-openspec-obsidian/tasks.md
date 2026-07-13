@@ -1,5 +1,6 @@
 ---
 type: tasks
+title: "adopt-openspec-obsidian tasks"
 change: adopt-openspec-obsidian
 tags: [openspec, type/tasks, capability/init, capability/backfill, capability/archive, capability/check]
 aliases: ["adopt-openspec-obsidian tasks"]

@@ -1,5 +1,6 @@
 ---
 type: spec
+title: "init spec"
 capability: init
 tags: [openspec, type/spec, capability/init]
 aliases: ["init spec"]

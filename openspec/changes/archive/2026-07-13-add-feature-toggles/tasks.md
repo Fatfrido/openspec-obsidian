@@ -1,5 +1,6 @@
 ---
 type: tasks
+title: "add-feature-toggles tasks"
 change: add-feature-toggles
 tags: [openspec, type/tasks, capability/features, capability/dashboard, capability/check, capability/init]
 aliases: ["add-feature-toggles tasks"]

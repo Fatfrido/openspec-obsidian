@@ -1,5 +1,6 @@
 ---
 type: spec-delta
+title: "document-public-availability release delta"
 change: document-public-availability
 capability: release
 tags: [openspec, type/spec, capability/release]

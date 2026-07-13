@@ -1,5 +1,6 @@
 ---
 type: design
+title: "add-feature-toggles design"
 change: add-feature-toggles
 tags: [openspec, type/design, capability/features, capability/dashboard, capability/check, capability/init]
 aliases: ["add-feature-toggles design"]

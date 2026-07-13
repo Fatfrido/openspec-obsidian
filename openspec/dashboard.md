@@ -10,7 +10,7 @@ aliases: ["openspec dashboard"]
 
 ## Active changes
 
-- [[changes/add-frontmatter-titles/proposal|add-frontmatter-titles]] — 0/5 tasks, in progress
+_No active changes._
 
 ## Capabilities
 
@@ -26,5 +26,6 @@ aliases: ["openspec dashboard"]
 
 - [[changes/archive/2026-07-10-adopt-openspec-obsidian/proposal|adopt-openspec-obsidian]] — 2026-07-10
 - [[changes/archive/2026-07-13-add-feature-toggles/proposal|add-feature-toggles]] — 2026-07-13
+- [[changes/archive/2026-07-13-add-frontmatter-titles/proposal|add-frontmatter-titles]] — 2026-07-13
 - [[changes/archive/2026-07-13-add-openspec-dashboard/proposal|add-openspec-dashboard]] — 2026-07-13
 - [[changes/archive/2026-07-13-document-public-availability/proposal|document-public-availability]] — 2026-07-13

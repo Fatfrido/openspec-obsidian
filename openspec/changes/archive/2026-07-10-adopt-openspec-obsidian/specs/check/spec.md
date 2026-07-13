@@ -1,5 +1,6 @@
 ---
 type: spec-delta
+title: "adopt-openspec-obsidian check delta"
 change: adopt-openspec-obsidian
 capability: check
 tags: [openspec, type/spec, capability/check]

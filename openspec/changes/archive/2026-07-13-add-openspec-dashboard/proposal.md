@@ -1,5 +1,6 @@
 ---
 type: proposal
+title: "add-openspec-dashboard proposal"
 change: add-openspec-dashboard
 tags: [openspec, type/proposal, capability/dashboard]
 aliases: ["add-openspec-dashboard proposal"]

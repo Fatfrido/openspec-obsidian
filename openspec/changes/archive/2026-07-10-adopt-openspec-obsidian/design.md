@@ -1,5 +1,6 @@
 ---
 type: design
+title: "adopt-openspec-obsidian design"
 change: adopt-openspec-obsidian
 tags: [openspec, type/design, capability/init, capability/backfill, capability/archive, capability/check]
 aliases: ["adopt-openspec-obsidian design"]

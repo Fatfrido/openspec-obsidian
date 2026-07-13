@@ -1,5 +1,6 @@
 ---
 type: proposal
+title: "document-public-availability proposal"
 change: document-public-availability
 tags: [openspec, type/proposal, capability/release]
 aliases: ["document-public-availability proposal"]

@@ -1,5 +1,6 @@
 ---
 type: spec
+title: "check spec"
 capability: check
 tags: [openspec, type/spec, capability/check]
 aliases: ["check spec"]

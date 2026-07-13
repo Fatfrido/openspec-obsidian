@@ -1,5 +1,6 @@
 ---
 type: spec-delta
+title: "add-feature-toggles check delta"
 change: add-feature-toggles
 capability: check
 tags: [openspec, type/spec, capability/check]
