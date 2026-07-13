@@ -1,0 +1,6 @@
+# openspec-obsidian optional features.
+# Set a feature to true to enable it; optional features are opt-in (default off).
+# An absent file, an absent features: key, or an unlisted name all mean disabled.
+# Unknown names are ignored, so a newer config keeps working with an older tool.
+features:
+  dashboard: false
