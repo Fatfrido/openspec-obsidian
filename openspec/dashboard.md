@@ -10,7 +10,7 @@ aliases: ["openspec dashboard"]
 
 ## Active changes
 
-_No active changes._
+- [[changes/add-feature-toggles/proposal|add-feature-toggles]] — 0/10 tasks, in progress
 
 ## Capabilities
 
