@@ -3,9 +3,9 @@ type: proposal
 change: add-openspec-dashboard
 tags: [openspec, type/proposal, capability/dashboard]
 aliases: ["add-openspec-dashboard proposal"]
-design: "[[changes/add-openspec-dashboard/design|add-openspec-dashboard design]]"
-tasks: "[[changes/add-openspec-dashboard/tasks|add-openspec-dashboard tasks]]"
-specs: ["[[changes/add-openspec-dashboard/specs/dashboard/spec|add-openspec-dashboard dashboard delta]]"]
+design: "[[changes/archive/2026-07-13-add-openspec-dashboard/design|add-openspec-dashboard design]]"
+tasks: "[[changes/archive/2026-07-13-add-openspec-dashboard/tasks|add-openspec-dashboard tasks]]"
+specs: ["[[changes/archive/2026-07-13-add-openspec-dashboard/specs/dashboard/spec|add-openspec-dashboard dashboard delta]]"]
 ---
 
 ## Why
