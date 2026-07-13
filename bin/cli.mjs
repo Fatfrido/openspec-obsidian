@@ -16,9 +16,11 @@ Commands:
   backfill  add Obsidian frontmatter to existing bare artifacts (idempotent)
   archive   sync delta specs into openspec/specs/ and move every all-tasks-complete change
             to openspec/changes/archive/YYYY-MM-DD-<id>/, rewriting its wikilinks
-  check     exit 1 if any change is complete (all tasks checked) but not archived (CI gate)
+  check     exit 1 if any change is complete (all tasks checked) but not archived (CI gate);
+            also fails on a stale openspec/dashboard.md when the dashboard feature is enabled
   dashboard generate openspec/dashboard.md (changes, progress, capabilities, archive)
             and seed openspec/dashboard.base (Obsidian Bases view) when absent
+            (requires the dashboard feature: set features.dashboard: true in openspec/obsidian.yaml)
 
 Options:
   --root <dir>  repo root to operate on (default: current directory)

@@ -27,5 +27,5 @@ aliases: ["add-feature-toggles tasks"]
 
 ## 5. Repo dogfood, CI, and docs
 
-- [ ] 5.1 Remove the dashboard regeneration and drift-diff steps from `.github/workflows/ci.yml` (the `check` staleness gate now covers freshness). Verify: `node bin/cli.mjs check` exits 0 locally with a fresh dashboard
-- [ ] 5.2 Update `README.md` (new "Optional features" section: the toggle file, opt-in default, enabling the dashboard, migration note for existing dashboard users; simplify the CI snippet to `check` only), `AGENTS.md` (architecture, commands, SDLC step 5 made conditional on the toggle, CI gate description), and the `USAGE` text in `bin/cli.mjs` (dashboard line mentions the toggle). Verify: `npm test`
+- [x] 5.1 Remove the dashboard regeneration and drift-diff steps from `.github/workflows/ci.yml` (the `check` staleness gate now covers freshness). Verify: `node bin/cli.mjs check` exits 0 locally with a fresh dashboard
+- [x] 5.2 Update `README.md` (new "Optional features" section: the toggle file, opt-in default, enabling the dashboard, migration note for existing dashboard users; simplify the CI snippet to `check` only), `AGENTS.md` (architecture, commands, SDLC step 5 made conditional on the toggle, CI gate description), and the `USAGE` text in `bin/cli.mjs` (dashboard line mentions the toggle). Verify: `npm test`
