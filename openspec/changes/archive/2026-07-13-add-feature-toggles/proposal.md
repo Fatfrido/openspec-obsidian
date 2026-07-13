@@ -3,9 +3,9 @@ type: proposal
 change: add-feature-toggles
 tags: [openspec, type/proposal, capability/features, capability/dashboard, capability/check, capability/init]
 aliases: ["add-feature-toggles proposal"]
-design: "[[changes/add-feature-toggles/design|add-feature-toggles design]]"
-tasks: "[[changes/add-feature-toggles/tasks|add-feature-toggles tasks]]"
-specs: ["[[changes/add-feature-toggles/specs/features/spec|add-feature-toggles features delta]]", "[[changes/add-feature-toggles/specs/dashboard/spec|add-feature-toggles dashboard delta]]", "[[changes/add-feature-toggles/specs/check/spec|add-feature-toggles check delta]]", "[[changes/add-feature-toggles/specs/init/spec|add-feature-toggles init delta]]"]
+design: "[[changes/archive/2026-07-13-add-feature-toggles/design|add-feature-toggles design]]"
+tasks: "[[changes/archive/2026-07-13-add-feature-toggles/tasks|add-feature-toggles tasks]]"
+specs: ["[[changes/archive/2026-07-13-add-feature-toggles/specs/features/spec|add-feature-toggles features delta]]", "[[changes/archive/2026-07-13-add-feature-toggles/specs/dashboard/spec|add-feature-toggles dashboard delta]]", "[[changes/archive/2026-07-13-add-feature-toggles/specs/check/spec|add-feature-toggles check delta]]", "[[changes/archive/2026-07-13-add-feature-toggles/specs/init/spec|add-feature-toggles init delta]]"]
 ---
 
 ## Why

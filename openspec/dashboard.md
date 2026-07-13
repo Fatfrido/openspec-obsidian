@@ -10,19 +10,21 @@ aliases: ["openspec dashboard"]
 
 ## Active changes
 
-- [[changes/add-feature-toggles/proposal|add-feature-toggles]] — 0/10 tasks, in progress
+_No active changes._
 
 ## Capabilities
 
 - [[specs/archive/spec|archive]] — 2 requirements
 - [[specs/backfill/spec|backfill]] — 2 requirements
-- [[specs/check/spec|check]] — 1 requirement
-- [[specs/dashboard/spec|dashboard]] — 2 requirements
-- [[specs/init/spec|init]] — 2 requirements
+- [[specs/check/spec|check]] — 2 requirements
+- [[specs/dashboard/spec|dashboard]] — 3 requirements
+- [[specs/features/spec|features]] — 2 requirements
+- [[specs/init/spec|init]] — 3 requirements
 - [[specs/release/spec|release]] — 3 requirements
 
 ## Archive
 
 - [[changes/archive/2026-07-10-adopt-openspec-obsidian/proposal|adopt-openspec-obsidian]] — 2026-07-10
+- [[changes/archive/2026-07-13-add-feature-toggles/proposal|add-feature-toggles]] — 2026-07-13
 - [[changes/archive/2026-07-13-add-openspec-dashboard/proposal|add-openspec-dashboard]] — 2026-07-13
 - [[changes/archive/2026-07-13-document-public-availability/proposal|document-public-availability]] — 2026-07-13
