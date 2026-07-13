@@ -4,9 +4,9 @@ title: "add-frontmatter-titles proposal"
 change: add-frontmatter-titles
 tags: [openspec, type/proposal, capability/backfill]
 aliases: ["add-frontmatter-titles proposal"]
-design: "[[changes/add-frontmatter-titles/design|add-frontmatter-titles design]]"
-tasks: "[[changes/add-frontmatter-titles/tasks|add-frontmatter-titles tasks]]"
-specs: ["[[changes/add-frontmatter-titles/specs/backfill/spec|add-frontmatter-titles backfill delta]]"]
+design: "[[changes/archive/2026-07-13-add-frontmatter-titles/design|add-frontmatter-titles design]]"
+tasks: "[[changes/archive/2026-07-13-add-frontmatter-titles/tasks|add-frontmatter-titles tasks]]"
+specs: ["[[changes/archive/2026-07-13-add-frontmatter-titles/specs/backfill/spec|add-frontmatter-titles backfill delta]]"]
 ---
 
 ## Why
