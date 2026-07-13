@@ -32,6 +32,9 @@ jobs:
       # This repo dogfoods openspec-obsidian, so gate with the local CLI
       # (external repos would use: npx github:Fatfrido/openspec-obsidian check).
       - run: npm run opsx:check
+      # This repo dogfoods openspec-obsidian: regenerate the dashboard and fail on drift.
+      - run: npm run opsx:dashboard
+      - run: git diff --exit-code openspec/dashboard.md openspec/dashboard.base
 
   version:
     name: Version
