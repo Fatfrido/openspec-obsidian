@@ -3,9 +3,9 @@ type: proposal
 change: document-public-availability
 tags: [openspec, type/proposal, capability/release]
 aliases: ["document-public-availability proposal"]
-design: "[[changes/document-public-availability/design|document-public-availability design]]"
-tasks: "[[changes/document-public-availability/tasks|document-public-availability tasks]]"
-specs: ["[[changes/document-public-availability/specs/release/spec|document-public-availability release delta]]"]
+design: "[[changes/archive/2026-07-13-document-public-availability/design|document-public-availability design]]"
+tasks: "[[changes/archive/2026-07-13-document-public-availability/tasks|document-public-availability tasks]]"
+specs: ["[[changes/archive/2026-07-13-document-public-availability/specs/release/spec|document-public-availability release delta]]"]
 ---
 
 ## Why
