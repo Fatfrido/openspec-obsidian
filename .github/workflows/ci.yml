@@ -20,7 +20,7 @@ jobs:
       - run: npm test
 
   specs:
-    name: OpenSpec
+    name: Validate OpenSpec
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,10 +28,10 @@ jobs:
         with:
           node-version: 20
       - run: npm install -g @fission-ai/openspec@1.4.1
-      - run: openspec validate --all --strict --no-interactive
+      - run: npm run opsx:validate
       # This repo dogfoods openspec-obsidian, so gate with the local CLI
       # (external repos would use: npx github:Fatfrido/openspec-obsidian check).
-      - run: node bin/cli.mjs check
+      - run: npm run opsx:check
 
   version:
     name: Version
