@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Commands: init | backfill | archive | check | dashboard | hubs.
+// Commands: init | backfill | archive | check | dashboard | hubs | changelog.
 // Exit codes: 0 ok, 1 failure, 2 usage.
 
 import path from "node:path";
@@ -9,6 +9,7 @@ import { backfill, BackfillError } from "../lib/backfill.mjs";
 import { init, InitError } from "../lib/init.mjs";
 import { dashboard, verifyDashboard, DashboardError } from "../lib/dashboard.mjs";
 import { hubs, HubsError } from "../lib/hubs.mjs";
+import { changelog, ChangelogError } from "../lib/changelog.mjs";
 
 const USAGE = `Usage: openspec-obsidian <command> [options]
 
@@ -24,11 +25,14 @@ Commands:
             (requires the dashboard feature: set features.dashboard: true in openspec/obsidian.yaml)
   hubs      generate one hub note per active change at openspec/changes/<id>.md (a named
             graph anchor: task progress + artifact links); removes stale hub notes (opt-in)
+  changelog prepend a "## v<version>" release section to openspec/changelog.md from the
+            Conventional Commit history since the previous release (requires git; --release <tag>)
 
 Options:
-  --root <dir>  repo root to operate on (default: current directory)
-  --dry-run     backfill/dashboard/hubs: print planned actions, write nothing
-  --force       init: overwrite schema/template files; dashboard: overwrite dashboard.base
+  --root <dir>      repo root to operate on (default: current directory)
+  --dry-run         backfill/dashboard/hubs/changelog: print planned actions, write nothing
+  --force           init: overwrite schema/template files; dashboard: overwrite dashboard.base
+  --release <tag>   changelog: the published release tag (e.g. v1.6.0)
 `;
 
 function parseArgs(argv) {
@@ -39,7 +43,10 @@ function parseArgs(argv) {
       args.root = argv[++i];
       if (args.root === undefined) return null;
     } else if (a === "--dry-run") args.dryRun = true;
-    else if (a === "--force") args.force = true;
+    else if (a === "--release") {
+      args.release = argv[++i];
+      if (args.release === undefined) return null;
+    } else if (a === "--force") args.force = true;
     else if (a.startsWith("-")) return null;
     else args._.push(a);
   }
@@ -47,7 +54,7 @@ function parseArgs(argv) {
 }
 
 const args = parseArgs(process.argv.slice(2));
-if (!args || args._.length !== 1 || !["init", "backfill", "archive", "check", "dashboard", "hubs"].includes(args._[0])) {
+if (!args || args._.length !== 1 || !["init", "backfill", "archive", "check", "dashboard", "hubs", "changelog"].includes(args._[0])) {
   console.error(USAGE);
   process.exit(2);
 }
@@ -60,14 +67,16 @@ try {
   else if (cmd === "archive") archive(root);
   else if (cmd === "check") { check(root); verifyDashboard(root); }
   else if (cmd === "dashboard") dashboard(root, { dryRun: !!args.dryRun, force: !!args.force });
-  else hubs(root, { dryRun: !!args.dryRun });
+  else if (cmd === "hubs") hubs(root, { dryRun: !!args.dryRun });
+  else changelog(root, { release: args.release, dryRun: !!args.dryRun });
 } catch (err) {
   const known =
     err instanceof ArchiveError ||
     err instanceof BackfillError ||
     err instanceof InitError ||
     err instanceof DashboardError ||
-    err instanceof HubsError;
+    err instanceof HubsError ||
+    err instanceof ChangelogError;
   console.error(known ? err.message : err);
   process.exit(1);
 }

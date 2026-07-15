@@ -40,3 +40,38 @@ jobs:
       - run: npm install -g npm@latest
       - run: npm test
       - run: npm publish --access public
+
+  changelog:
+    name: Record changelog
+    needs: publish
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # commit the generated changelog note to main
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0 # full history so the commit range resolves
+          fetch-tags: true # tags are the release anchors the command reads
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Generate changelog section for the release
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: node bin/cli.mjs changelog --release "$TAG"
+      - name: Commit and push the changelog
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          if [ -z "$(git status --porcelain openspec/changelog.md)" ]; then
+            echo "No changelog change to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add openspec/changelog.md
+          git commit -m "docs(changelog): ${TAG}"
+          git pull --rebase origin main
+          git push origin HEAD:main
