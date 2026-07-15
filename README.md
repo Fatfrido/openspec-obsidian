@@ -119,6 +119,20 @@ Strictly opt-in: **invocation is the only switch.** No other command creates hub
 
 **Graph color-groups tip:** in Obsidian's Graph view, add color groups on the existing tags (Graph settings → Groups) — e.g. `tag:#type/hub`, `tag:#type/proposal`, `tag:#type/spec` — to tint each artifact kind, so a hub note and its cluster read at a glance.
 
+## Changelog
+
+Record what each release contained, right in the vault:
+
+```bash
+openspec-obsidian changelog --release v1.6.0
+```
+
+It prepends a `## v<version> — <date>` section to `openspec/changelog.md` (creating the note with `type: changelog` frontmatter when absent), listing every Conventional Commit since the previous release, bucketed **Breaking / Features / Fixes / Internal**. A commit subject naming an archived change id (e.g. `(add-frontmatter-titles)`) is wikilinked to that archived proposal, so the changelog joins the graph. This is the only command that shells out to **git** — tags and log are unreachable from `node:fs` — so it requires a full-history, tag-bearing checkout (`fetch-depth: 0`, `fetch-tags: true`); it fails with an actionable error on a shallow clone or an unknown tag.
+
+The previous release is **self-anchored**: it is the version in the topmost `## v` heading of the existing note — no GitHub API, no state file. A missing or heading-less note bootstraps from full history. Sections are prepend-only and never regenerated, so the note is immutable history; re-running for an already-recorded version is a no-op, and identical repo state yields byte-identical output. Use `--dry-run` to preview the section without writing.
+
+In this repo the release pipeline runs it automatically (see [Releasing](#releasing-maintainers)); adopters opt in the same way — wire the step into their own release workflow. **Invocation is the only switch:** never call it and the vault contains no changelog note.
+
 ## Example: this repo dogfoods openspec-obsidian
 
 `openspec/` in this repository is a worked example, produced by exactly the steps above. It was bootstrapped with `openspec init`, then `openspec-obsidian init`, and the CLI's own behavior was documented through the full workflow: the `adopt-openspec-obsidian` change (proposal + design + tasks + four delta specs) was authored and then synced and moved with `openspec-obsidian archive`. Browse:
@@ -176,6 +190,8 @@ To cut a release:
 2. Create a GitHub Release with tag `v<version>` (e.g. `v0.1.0`) matching that version.
 
 Publishing the Release runs the workflow: it verifies the release tag equals `v<version>` from `package.json` (failing the release without publishing if they differ), then runs `npm test` and `npm publish --access public`. Provenance is attested automatically by Trusted Publishing. `workflow_dispatch` allows a manual run against `main`. Nothing is ever published from a developer machine.
+
+After a successful publish, the `changelog` job checks out `main` with full history and tags, runs `openspec-obsidian changelog --release v<version>`, and commits `docs(changelog): v<version>` to `main` when the note changed (as `github-actions[bot]`, pushed with the workflow token so it triggers no further run and receives no version tag). A **failed** publish records nothing. The job is idempotent: re-running a release whose section already landed pushes nothing. So the full release procedure is just the two steps above — the changelog follows automatically.
 
 ## Contributing
 
