@@ -1,11 +1,12 @@
 ---
 type: proposal
+title: "add-change-hub-notes proposal"
 change: add-change-hub-notes
 tags: [openspec, type/proposal, capability/hubs]
 aliases: ["add-change-hub-notes proposal"]
-design: "[[changes/add-change-hub-notes/design|add-change-hub-notes design]]"
-tasks: "[[changes/add-change-hub-notes/tasks|add-change-hub-notes tasks]]"
-specs: ["[[changes/add-change-hub-notes/specs/hubs/spec|add-change-hub-notes hubs delta]]"]
+design: "[[changes/archive/2026-07-15-add-change-hub-notes/design|add-change-hub-notes design]]"
+tasks: "[[changes/archive/2026-07-15-add-change-hub-notes/tasks|add-change-hub-notes tasks]]"
+specs: ["[[changes/archive/2026-07-15-add-change-hub-notes/specs/hubs/spec|add-change-hub-notes hubs delta]]"]
 ---
 
 ## Why

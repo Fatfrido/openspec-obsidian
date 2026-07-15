@@ -1,5 +1,6 @@
 ---
 type: tasks
+title: "add-change-hub-notes tasks"
 change: add-change-hub-notes
 tags: [openspec, type/tasks, capability/hubs]
 aliases: ["add-change-hub-notes tasks"]

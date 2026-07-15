@@ -1,5 +1,6 @@
 ---
 type: spec-delta
+title: "add-change-hub-notes hubs delta"
 change: add-change-hub-notes
 capability: hubs
 tags: [openspec, type/spec, capability/hubs]

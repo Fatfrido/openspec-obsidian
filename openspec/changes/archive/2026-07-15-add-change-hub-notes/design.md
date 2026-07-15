@@ -1,5 +1,6 @@
 ---
 type: design
+title: "add-change-hub-notes design"
 change: add-change-hub-notes
 tags: [openspec, type/design, capability/hubs]
 aliases: ["add-change-hub-notes design"]
