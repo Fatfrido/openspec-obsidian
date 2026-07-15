@@ -103,6 +103,22 @@ It writes `openspec/dashboard.md` — a deterministic, wikilinked summary of eve
 
 The note is a snapshot: re-run `dashboard` whenever changes or specs move — in particular right after `archive` — so it stays current. When the `dashboard` feature is enabled, `check` fails on a missing or stale `openspec/dashboard.md` (see CI snippets below), so drift is caught without a separate step. Open `openspec/dashboard.md` in Obsidian as your entry point (bookmark it), or the `.base` for live filtering and sorting.
 
+## Hubs
+
+Give every change a single, natively-labeled anchor in the graph:
+
+```bash
+openspec-obsidian hubs
+```
+
+It writes one **hub note** per active change at `openspec/changes/<id>.md` — a file whose basename *is* the change id, so Obsidian labels its graph node with the change name for free (no [Front Matter Title](#graph-node-labels--front-matter-title-optional) plugin needed, and unlike that plugin this covers only changes, not specs). Each hub carries `type: hub` frontmatter, the change's task progress, and path wikilinks to its proposal, design, tasks, and delta specs, doubling as a per-change landing page. Regeneration is deterministic and idempotent, computed from the vault with `node:fs`, no OpenSpec CLI.
+
+Rerunning `hubs` refreshes every hub note and **deletes stale ones** — a `changes/*.md` file marked `type: hub` whose change directory is gone (archived or removed); notes lacking that marker are never touched. `--dry-run` previews both writes and removals without changing the vault. Because hub notes go stale the moment a change is archived, re-run `hubs` right after `archive`.
+
+Strictly opt-in: **invocation is the only switch.** No other command creates hub notes, and `backfill`, `dashboard`, `archive`, `check`, and the OpenSpec CLI all treat them as non-artifacts — never run `hubs` and the vault contains no extra files.
+
+**Graph color-groups tip:** in Obsidian's Graph view, add color groups on the existing tags (Graph settings → Groups) — e.g. `tag:#type/hub`, `tag:#type/proposal`, `tag:#type/spec` — to tint each artifact kind, so a hub note and its cluster read at a glance.
+
 ## Example: this repo dogfoods openspec-obsidian
 
 `openspec/` in this repository is a worked example, produced by exactly the steps above. It was bootstrapped with `openspec init`, then `openspec-obsidian init`, and the CLI's own behavior was documented through the full workflow: the `adopt-openspec-obsidian` change (proposal + design + tasks + four delta specs) was authored and then synced and moved with `openspec-obsidian archive`. Browse:

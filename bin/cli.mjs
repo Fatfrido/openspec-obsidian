@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// openspec-obsidian: navigate OpenSpec artifacts as an Obsidian vault.
-// Commands: init | backfill | archive | check. Exit codes: 0 ok, 1 failure, 2 usage.
+// Commands: init | backfill | archive | check | dashboard | hubs.
+// Exit codes: 0 ok, 1 failure, 2 usage.
 
 import path from "node:path";
 import process from "node:process";
@@ -8,6 +8,7 @@ import { archive, check, ArchiveError } from "../lib/archive.mjs";
 import { backfill, BackfillError } from "../lib/backfill.mjs";
 import { init, InitError } from "../lib/init.mjs";
 import { dashboard, verifyDashboard, DashboardError } from "../lib/dashboard.mjs";
+import { hubs, HubsError } from "../lib/hubs.mjs";
 
 const USAGE = `Usage: openspec-obsidian <command> [options]
 
@@ -21,10 +22,12 @@ Commands:
   dashboard generate openspec/dashboard.md (changes, progress, capabilities, archive)
             and seed openspec/dashboard.base (Obsidian Bases view) when absent
             (requires the dashboard feature: set features.dashboard: true in openspec/obsidian.yaml)
+  hubs      generate one hub note per active change at openspec/changes/<id>.md (a named
+            graph anchor: task progress + artifact links); removes stale hub notes (opt-in)
 
 Options:
   --root <dir>  repo root to operate on (default: current directory)
-  --dry-run     backfill/dashboard: print planned actions, write nothing
+  --dry-run     backfill/dashboard/hubs: print planned actions, write nothing
   --force       init: overwrite schema/template files; dashboard: overwrite dashboard.base
 `;
 
@@ -44,7 +47,7 @@ function parseArgs(argv) {
 }
 
 const args = parseArgs(process.argv.slice(2));
-if (!args || args._.length !== 1 || !["init", "backfill", "archive", "check", "dashboard"].includes(args._[0])) {
+if (!args || args._.length !== 1 || !["init", "backfill", "archive", "check", "dashboard", "hubs"].includes(args._[0])) {
   console.error(USAGE);
   process.exit(2);
 }
@@ -56,13 +59,15 @@ try {
   else if (cmd === "backfill") backfill(root, { dryRun: !!args.dryRun });
   else if (cmd === "archive") archive(root);
   else if (cmd === "check") { check(root); verifyDashboard(root); }
-  else dashboard(root, { dryRun: !!args.dryRun, force: !!args.force });
+  else if (cmd === "dashboard") dashboard(root, { dryRun: !!args.dryRun, force: !!args.force });
+  else hubs(root, { dryRun: !!args.dryRun });
 } catch (err) {
   const known =
     err instanceof ArchiveError ||
     err instanceof BackfillError ||
     err instanceof InitError ||
-    err instanceof DashboardError;
+    err instanceof DashboardError ||
+    err instanceof HubsError;
   console.error(known ? err.message : err);
   process.exit(1);
 }

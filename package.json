@@ -42,6 +42,7 @@
     "opsx:check": "node bin/cli.mjs check",
     "opsx:archive": "node bin/cli.mjs archive",
     "opsx:dashboard": "node bin/cli.mjs dashboard",
+    "opsx:hubs": "node bin/cli.mjs hubs",
     "prepublishOnly": "npm test"
   }
 }
