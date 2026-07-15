@@ -4,9 +4,9 @@ title: "add-release-changelog proposal"
 change: add-release-changelog
 tags: [openspec, type/proposal, capability/changelog, capability/release]
 aliases: ["add-release-changelog proposal"]
-design: "[[changes/add-release-changelog/design|add-release-changelog design]]"
-tasks: "[[changes/add-release-changelog/tasks|add-release-changelog tasks]]"
-specs: ["[[changes/add-release-changelog/specs/changelog/spec|add-release-changelog changelog delta]]", "[[changes/add-release-changelog/specs/release/spec|add-release-changelog release delta]]"]
+design: "[[changes/archive/2026-07-15-add-release-changelog/design|add-release-changelog design]]"
+tasks: "[[changes/archive/2026-07-15-add-release-changelog/tasks|add-release-changelog tasks]]"
+specs: ["[[changes/archive/2026-07-15-add-release-changelog/specs/changelog/spec|add-release-changelog changelog delta]]", "[[changes/archive/2026-07-15-add-release-changelog/specs/release/spec|add-release-changelog release delta]]"]
 ---
 
 ## Why

@@ -10,17 +10,19 @@ aliases: ["openspec dashboard"]
 
 ## Active changes
 
-- [[changes/add-release-changelog/proposal|add-release-changelog]] — 0/7 tasks, in progress
+- [[changes/add-contribution-gates/proposal|add-contribution-gates]] — 0/8 tasks, in progress
 
 ## Capabilities
 
 - [[specs/archive/spec|archive]] — 2 requirements
 - [[specs/backfill/spec|backfill]] — 2 requirements
+- [[specs/changelog/spec|changelog]] — 4 requirements
 - [[specs/check/spec|check]] — 2 requirements
 - [[specs/dashboard/spec|dashboard]] — 3 requirements
 - [[specs/features/spec|features]] — 2 requirements
+- [[specs/hubs/spec|hubs]] — 3 requirements
 - [[specs/init/spec|init]] — 3 requirements
-- [[specs/release/spec|release]] — 3 requirements
+- [[specs/release/spec|release]] — 4 requirements
 
 ## Archive
 
@@ -29,3 +31,5 @@ aliases: ["openspec dashboard"]
 - [[changes/archive/2026-07-13-add-frontmatter-titles/proposal|add-frontmatter-titles]] — 2026-07-13
 - [[changes/archive/2026-07-13-add-openspec-dashboard/proposal|add-openspec-dashboard]] — 2026-07-13
 - [[changes/archive/2026-07-13-document-public-availability/proposal|document-public-availability]] — 2026-07-13
+- [[changes/archive/2026-07-15-add-change-hub-notes/proposal|add-change-hub-notes]] — 2026-07-15
+- [[changes/archive/2026-07-15-add-release-changelog/proposal|add-release-changelog]] — 2026-07-15
