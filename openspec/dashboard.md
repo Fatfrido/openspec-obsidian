@@ -10,7 +10,7 @@ aliases: ["openspec dashboard"]
 
 ## Active changes
 
-_No active changes._
+- [[changes/add-contribution-gates/proposal|add-contribution-gates]] — 0/8 tasks, in progress
 
 ## Capabilities
 
