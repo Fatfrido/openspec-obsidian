@@ -19,6 +19,7 @@ _No active changes._
 - [[specs/check/spec|check]] — 2 requirements
 - [[specs/dashboard/spec|dashboard]] — 3 requirements
 - [[specs/features/spec|features]] — 2 requirements
+- [[specs/hubs/spec|hubs]] — 3 requirements
 - [[specs/init/spec|init]] — 3 requirements
 - [[specs/release/spec|release]] — 3 requirements
 
@@ -29,3 +30,4 @@ _No active changes._
 - [[changes/archive/2026-07-13-add-frontmatter-titles/proposal|add-frontmatter-titles]] — 2026-07-13
 - [[changes/archive/2026-07-13-add-openspec-dashboard/proposal|add-openspec-dashboard]] — 2026-07-13
 - [[changes/archive/2026-07-13-document-public-availability/proposal|document-public-availability]] — 2026-07-13
+- [[changes/archive/2026-07-15-add-change-hub-notes/proposal|add-change-hub-notes]] — 2026-07-15

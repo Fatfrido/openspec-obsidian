@@ -14,7 +14,8 @@ Single entrypoint dispatches to four self-contained command modules; a fifth mod
 bin/cli.mjs ──▶ lib/init.mjs      (seed schema + templates + config rules)
             ├─▶ lib/backfill.mjs  (add frontmatter to existing bare artifacts)
             ├─▶ lib/archive.mjs   (sync deltas → specs, move completed changes; also: check)
-            └─▶ lib/dashboard.mjs (generate openspec/dashboard.md + seed dashboard.base; gated on the dashboard toggle; also exports verifyDashboard for check)
+            ├─▶ lib/dashboard.mjs (generate openspec/dashboard.md + seed dashboard.base; gated on the dashboard toggle; also exports verifyDashboard for check)
+            └─▶ lib/hubs.mjs      (generate one openspec/changes/<id>.md hub note per active change; opt-in, stale-cleanup)
 ```
 
 - **`bin/cli.mjs`** is the *only* file that touches `process.argv`/`process.exit`. It parses args (hand-rolled `parseArgs`, no library), resolves `root = path.resolve(args.root ?? process.cwd())`, calls exactly one lib function inside a `try/catch`, and maps thrown typed errors to exit codes.
@@ -30,10 +31,10 @@ bin/cli.mjs ──▶ lib/init.mjs      (seed schema + templates + config rules)
 | Path | Purpose |
 |---|---|
 | `bin/` | CLI entrypoint (`cli.mjs`) — arg parsing, dispatch, exit codes |
-| `lib/` | Command implementations: `init.mjs`, `backfill.mjs`, `archive.mjs`, `dashboard.mjs`; plus `features.mjs` (optional-feature toggle reader) |
+| `lib/` | Command implementations: `init.mjs`, `backfill.mjs`, `archive.mjs`, `dashboard.mjs`, `hubs.mjs`; plus `features.mjs` (optional-feature toggle reader) |
 | `assets/` | Static data: `schema.yaml`, `config-rules.yaml`, `templates/*.md`, `obsidian.yaml` (all installed/seeded by `init`), `dashboard.base` (seeded by `dashboard`) |
 | `assets/templates/` | Obsidian-aware artifact scaffolds: `proposal.md`, `spec.md`, `design.md`, `tasks.md` |
-| `test/` | `node:test` suites (`archive.test.mjs`, `backfill.test.mjs`, `dashboard.test.mjs`, `features.test.mjs`, `init.test.mjs`) |
+| `test/` | `node:test` suites (`archive.test.mjs`, `backfill.test.mjs`, `dashboard.test.mjs`, `features.test.mjs`, `hubs.test.mjs`, `init.test.mjs`) |
 | `.github/workflows/` | `ci.yml` — runs `npm test` on Node 20 |
 
 `files: ["bin", "lib", "assets"]` in `package.json` — only these three dirs are published.
@@ -49,6 +50,7 @@ node bin/cli.mjs backfill [--root <dir>] [--dry-run]# add frontmatter (idempoten
 node bin/cli.mjs archive [--root <dir>]             # sync deltas + archive complete changes
 node bin/cli.mjs check [--root <dir>]               # CI gate: exit 1 if complete-but-unarchived
 node bin/cli.mjs dashboard [--root <dir>] [--dry-run] [--force]  # generate openspec/dashboard.md + seed dashboard.base (requires features.dashboard: true in openspec/obsidian.yaml)
+node bin/cli.mjs hubs [--root <dir>] [--dry-run]    # generate/refresh one openspec/changes/<id>.md hub note per active change; removes stale hubs (opt-in)
 ```
 
 There are **no build, lint, or format scripts** — `package.json` declares only `test`. No bundler/transpiler (ships `.mjs` directly).
@@ -100,6 +102,7 @@ Working with a high-reasoning model (Opus-class): spend it on **explore + propos
 - `lib/archive.mjs` — largest module; delta parsing (`parseDelta`/`parseBlocks`/`applyOps` for ADDED/MODIFIED/REMOVED/RENAMED), `syncChange`, `moveChange` (link rewrite + verify), `taskState` (counts `- [x]`/`- [ ]`), `archive`, `check`.
 - `lib/backfill.mjs` — `deriveArtifact` (classify by path), `generateFrontmatter` (per-kind YAML block), idempotent `backfill` (skips files starting with `---`), post-write link verification.
 - `lib/dashboard.mjs` — `collectChanges`/`collectSpecs`/`renderDashboard` (pure, exported) + `dashboard()` (gated on the `dashboard` feature toggle) + `verifyDashboard()` (read-only staleness gate used by `check`); computes task progress and requirement counts from `fs` and writes `openspec/dashboard.md` (deterministic), seeding `openspec/dashboard.base` when absent.
+- `lib/hubs.mjs` — `HubsError`, `collectHubs`/`renderHub` (pure, exported) + `hubs(root, {dryRun})`; writes one `openspec/changes/<id>.md` hub note (`type: hub` frontmatter, task progress, artifact wikilinks) per active change and deletes stale hub-marked `changes/*.md` whose change dir is gone. Opt-in (invocation is the only switch); inert to every other command (`deriveArtifact` returns null for `changes/<id>.md`, `collectChanges` skips non-dirs).
 - `lib/init.mjs` — copies `assets/schema.yaml` → `openspec/schemas/spec-driven/schema.yaml` and `assets/templates/*.md` → `openspec/schemas/spec-driven/templates/`, seeds `assets/obsidian.yaml` → `openspec/obsidian.yaml` when absent (never overwritten, even with `--force`), appends config rules, gitignores `openspec/.obsidian/`. Guards: throws if `openspec/config.yaml` absent.
 - `assets/schema.yaml` — OpenSpec workflow graph: `artifacts` (id/generates/template/instruction/requires) + `apply` block.
 - `assets/config-rules.yaml` — `rules:` map (proposal/specs/design/tasks) spliced into `openspec/config.yaml`.
