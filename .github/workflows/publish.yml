@@ -46,7 +46,8 @@ jobs:
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
     permissions:
-      contents: write # commit the generated changelog note to main
+      contents: write # push the short-lived changelog branch
+      pull-requests: write # open + merge the changelog PR (direct push to main is blocked by the protect-main ruleset)
     steps:
       - uses: actions/checkout@v4
         with:
@@ -60,17 +61,26 @@ jobs:
         env:
           TAG: ${{ github.event.release.tag_name }}
         run: node bin/cli.mjs changelog --release "$TAG"
-      - name: Commit and push the changelog
+      - name: Open and squash-merge a changelog PR
         env:
           TAG: ${{ github.event.release.tag_name }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           if [ -z "$(git status --porcelain openspec/changelog.md)" ]; then
             echo "No changelog change to commit."
             exit 0
           fi
+          # The protect-main ruleset rejects direct pushes ("changes must be made
+          # through a pull request"), so route the note through a PR and merge it.
+          # A GITHUB_TOKEN merge triggers no workflows, so this never re-tags/loops.
+          branch="docs/changelog-${TAG}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
           git add openspec/changelog.md
           git commit -m "docs(changelog): ${TAG}"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          git push --force origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "docs(changelog): ${TAG}" \
+            --body "Automated changelog entry for release ${TAG}."
+          gh pr merge "$branch" --squash --delete-branch
