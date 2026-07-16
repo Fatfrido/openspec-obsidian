@@ -35,7 +35,8 @@ jobs:
           npm version "$version" --no-git-tag-version --allow-same-version
           echo "Set package.json version to ${version} from release tag ${RELEASE_TAG}."
       # Node 20 ships npm 10.x; tokenless Trusted Publishing needs npm >= 11.5.1.
-      - run: npm install -g npm@latest
+      # Pin to npm 11.x: npm@latest is now 12.x, which dropped Node 20 (requires Node >= 22).
+      - run: npm install -g npm@^11.5.1
       - run: npm test
       - run: npm publish --access public
 
