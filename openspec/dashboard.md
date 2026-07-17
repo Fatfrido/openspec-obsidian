@@ -11,6 +11,7 @@ aliases: ["openspec dashboard"]
 ## Active changes
 
 - [[changes/add-contribution-gates/proposal|add-contribution-gates]] — 0/8 tasks, in progress
+- [[changes/harden-fenced-parsing/proposal|harden-fenced-parsing]] — 0/5 tasks, in progress
 
 ## Capabilities
 
