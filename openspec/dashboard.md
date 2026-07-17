@@ -11,6 +11,7 @@ aliases: ["openspec dashboard"]
 ## Active changes
 
 - [[changes/add-contribution-gates/proposal|add-contribution-gates]] — 0/8 tasks, in progress
+- [[changes/tolerate-crlf-artifacts/proposal|tolerate-crlf-artifacts]] — 0/3 tasks, in progress
 
 ## Capabilities
 
