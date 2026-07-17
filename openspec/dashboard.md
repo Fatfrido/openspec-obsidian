@@ -11,6 +11,7 @@ aliases: ["openspec dashboard"]
 ## Active changes
 
 - [[changes/add-contribution-gates/proposal|add-contribution-gates]] — 0/8 tasks, in progress
+- [[changes/add-upgrade-command/proposal|add-upgrade-command]] — 0/5 tasks, in progress
 
 ## Capabilities
 
